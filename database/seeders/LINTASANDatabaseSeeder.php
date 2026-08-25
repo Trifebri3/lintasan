@@ -415,57 +415,57 @@ class LINTASANDatabaseSeeder extends Seeder
         // 9. Seed Settings (Dynamic About Page Contents)
         Setting::create([
             'key' => 'about_profile',
-            'value_id' => 'berkomitmen untuk membangun kolaborasi yang inklusif dan transparan, meningkatkan edukasi melalui pengetahuan yang dibagikan secara terbuka, dan menciptakan inovasi yang berkelanjutan melalui proses yang jelas dan akuntabel.',
-            'value_en' => 'committed to building inclusive and transparent collaboration, improving education through openly shared knowledge, and creating sustainable innovation through clear and accountable processes.',
+            'value_id' => 'berkomitmen untuk membangun kolaborasi yang inklusif dan transparan, meningkatkan edukasi kesiapsiagaan bencana, serta menghadirkan inovasi teknologi tepat guna dan konservasi bakau demi kemandirian masyarakat pesisir secara berkelanjutan.',
+            'value_en' => 'committed to building inclusive and transparent collaboration, enhancing disaster preparedness education, and delivering appropriate technological innovation and mangrove conservation for the sustainable independence of coastal communities.',
             'type' => 'textarea'
         ]);
 
         Setting::create([
             'key' => 'about_pillar_kolaborasi',
-            'value_id' => 'Membangun kerja sama lintas sektor antara masyarakat, relawan, lembaga pemerintah, swasta, dan komunitas lokal untuk menciptakan dampak sosial yang lebih luas dan berkelanjutan.',
-            'value_en' => 'Building cross-sector cooperation between communities, volunteers, government agencies, private sectors, and local communities to create broader and sustainable social impact.',
+            'value_id' => 'Membangun kerja sama lintas sektor antara masyarakat, relawan, lembaga pemerintah, swasta, dan komunitas lokal untuk menciptakan ketangguhan wilayah pesisir secara berkelanjutan.',
+            'value_en' => 'Building cross-sector cooperation between communities, volunteers, government agencies, private sectors, and local communities to create sustainable coastal resilience.',
             'type' => 'textarea'
         ]);
 
         Setting::create([
             'key' => 'about_pillar_edukasi',
-            'value_id' => 'Memberikan pengetahuan, kesadaran, dan keterampilan kepada anak-anak dan masyarakat desa agar mampu menghadapi tantangan sosial dan bencana secara mandiri dan bijak.',
-            'value_en' => 'Providing knowledge, awareness, and skills to children and village communities to enable them to face social and disaster challenges independently and wisely.',
+            'value_id' => 'Memberikan pengetahuan kesiapsiagaan bencana (SPAB), kesadaran konservasi ekosistem bakau, serta keahlian vokasi agar masyarakat pesisir tangguh, mandiri, dan bijak.',
+            'value_en' => 'Providing disaster preparedness knowledge (SPAB), mangrove ecosystem conservation awareness, and vocational skills to make coastal communities resilient, independent, and wise.',
             'type' => 'textarea'
         ]);
 
         Setting::create([
             'key' => 'about_pillar_inovasi',
-            'value_id' => 'Menghadirkan solusi baru dan tepat guna dalam program sosial, pendidikan, dan mitigasi bencana yang kontekstual, kreatif, dan adaptif terhadap perubahan.',
-            'value_en' => 'Delivering new and appropriate solutions in social, educational, and disaster mitigation programs that are contextual, creative, and adaptive to change.',
+            'value_id' => 'Menghadirkan solusi baru dan tepat guna, seperti solar freezer / pendingin bertenaga surya untuk nelayan, serta digitalisasi pengelolaan dan pemasaran hasil tangkapan laut.',
+            'value_en' => 'Delivering new and appropriate solutions, such as solar-powered freezers for fishermen, and digitalization of seafood catch management and marketing.',
             'type' => 'textarea'
         ]);
 
         Setting::create([
             'key' => 'about_pillar_transparansi',
-            'value_id' => 'Menjunjung tinggi akuntabilitas dalam setiap proses, dari perencanaan, pelaksanaan hingga pelaporan. Informasi terbuka menjadi dasar kepercayaan antara yayasan, masyarakat, dan mitra.',
-            'value_en' => 'Upholding accountability in every process, from planning, execution to reporting. Open information is the foundation of trust between the foundation, society, and partners.',
+            'value_id' => 'Menjunjung tinggi akuntabilitas dalam setiap proses. Keterbukaan informasi program dan laporan keuangan menjadi dasar kepercayaan antara yayasan, masyarakat, dan mitra kolaborasi.',
+            'value_en' => 'Upholding accountability in every process. Open program information and financial reporting are the foundation of trust between the foundation, communities, and collaboration partners.',
             'type' => 'textarea'
         ]);
 
         Setting::create([
             'key' => 'about_conclusion',
-            'value_id' => "Keempat pilar ini saling berkaitan dan saling menguatkan:\n\nKolaborasi memperkuat jaringan kerja dan dukungan lintas sektor.\nEdukasi memperkuat kapasitas masyarakat dan mendorong kemandirian.\nInovasi memperkuat dampak dan efektivitas program sosial dan kemanusiaan.\nTransparansi memperkuat kepercayaan publik serta integritas lembaga.\n\nDengan empat pilar ini, Yayasan Senyum Anak Negeri hadir sebagai lembaga sosial yang berdaya, terpercaya, dan berdampak nyata dalam melindungi anak dan memperkuat komunitas desa di wilayah rawan bencana.",
-            'value_en' => "These four pillars are interrelated and reinforce each other:\n\nCollaboration strengthens networks and cross-sector support.\nEducation strengthens community capacity and encourages independence.\nInnovation strengthens the impact and effectiveness of social and humanitarian programs.\nTransparency strengthens public trust and institutional integrity.\n\nWith these four pillars, Senyum Anak Negeri Foundation stands as an empowered, trusted, and impactful social institution in protecting children and strengthening village communities in disaster-prone areas.",
+            'value_id' => "Keempat pilar ini saling berkaitan dan saling menguatkan:\n\nKolaborasi memperkuat jaringan kerja dan dukungan lintas sektor.\nEdukasi memperkuat kapasitas masyarakat dan mendorong kemandirian.\nInovasi memperkuat dampak dan efektivitas program di lapangan.\nTransparansi memperkuat kepercayaan publik serta integritas lembaga.\n\nDengan empat pilar ini, Yayasan LINTASAN hadir sebagai lembaga sosial yang berdaya, terpercaya, dan berdampak nyata dalam menjaga kelestarian pesisir serta mendampingi komunitas nelayan di wilayah dampingan.",
+            'value_en' => "These four pillars are interrelated and reinforce each other:\n\nCollaboration strengthens networks and cross-sector support.\nEducation strengthens community capacity and encourages independence.\nInnovation strengthens program impact and effectiveness in the field.\nTransparency strengthens public trust and integrity of the institution.\n\nWith these four pillars, LINTASAN Foundation stands as an empowered, trusted, and impactful social institution in preserving coastal areas and accompanying fishermen in our partner communities.",
             'type' => 'textarea'
         ]);
 
         Setting::create([
             'key' => 'about_visi',
-            'value_id' => 'Menjadi yayasan yang berdaya, inklusif, dan berdampak dalam melindungi anak-anak serta memberdayakan komunitas desa di wilayah rawan bencana melalui kolaborasi, edukasi, dan inovasi.',
-            'value_en' => 'To be an empowered, inclusive, and impactful foundation in protecting children and empowering village communities in disaster-prone areas through collaboration, education, and innovation.',
+            'value_id' => 'Menjadi yayasan yang berdaya, inklusif, dan berdampak dalam melestarikan ekosistem pesisir serta memberdayakan komunitas nelayan dan masyarakat desa mitra melalui kolaborasi, edukasi, dan inovasi.',
+            'value_en' => 'To be an empowered, inclusive, and impactful foundation in preserving coastal ecosystems and empowering fishermen and partner village communities through collaboration, education, and innovation.',
             'type' => 'textarea'
         ]);
 
         Setting::create([
             'key' => 'about_misi',
-            'value_id' => "Melindungi dan memberdayakan anak-anak sebagai kelompok paling rentan dalam situasi sosial maupun bencana, melalui program perlindungan, pendidikan, dan pendampingan.\nMembangun kolaborasi aktif dengan pemerintah, masyarakat lokal, relawan, dan mitra strategis dalam pelaksanaan program sosial dan kemanusiaan di desa-desa rawan bencana\nMenyelenggarakan edukasi dan pelatihan yang berfokus pada kesiapsiagaan bencana, kesadaran lingkungan, dan penguatan kapasitas masyarakat desa.\nMeningkatkan kapasitas masyarakat dan merintis solusi inovatif berbasis lokalitas untuk mendukung kehidupan anak dan komunitas.\nMendorong partisipasi komunitas dalam setiap proses program agar tercipta rasa memiliki, keberlanjutan, dan kemandirian masyarakat.",
-            'value_en' => "Protect and empower children as the most vulnerable group in social and disaster situations, through protection, education, and mentoring programs.\nBuild active collaboration with government, local communities, volunteers, and strategic partners in implementing social and humanitarian programs in disaster-prone villages.\nOrganize education and training focusing on disaster preparedness, environmental awareness, and village community capacity building.\nIncrease community capacity and pioneer local-based innovative solutions to support the lives of children and communities.\nEncourage community participation in every program process to create a sense of ownership, sustainability, and community independence.",
+            'value_id' => "Melaksanakan mitigasi bencana tsunami dan perlindungan ekosistem pesisir melalui konservasi hutan bakau secara berkelanjutan.\nMemberdayakan masyarakat nelayan dan pesisir melalui penyediaan teknologi tepat guna seperti solar freezer serta digitalisasi pemasaran hasil laut.\nMembangun kolaborasi aktif dengan pemerintah, komunitas lokal, relawan, dan mitra strategis dalam menjaga kelestarian lanskap pesisir.\nMenyelenggarakan edukasi kesiapsiagaan bencana (SPAB) dan pelatihan keahlian vokasi untuk meningkatkan kemandirian masyarakat dampingan.\nMenyelenggarakan keterbukaan informasi dan akuntabilitas dalam tata kelola program demi kepercayaan publik dan integritas lembaga.",
+            'value_en' => "Implement tsunami mitigation and coastal ecosystem protection through sustainable mangrove conservation.\nEmpower fishing and coastal communities through the provision of appropriate technology such as solar freezers and digitalization of seafood marketing.\nBuild active collaboration with the government, local communities, volunteers, and strategic partners in preserving coastal landscapes.\nOrganize disaster preparedness education (SPAB) and vocational skills training to enhance the independence of assisted communities.\nConduct open information and accountability in program management for public trust and institutional integrity.",
             'type' => 'textarea'
         ]);
 
