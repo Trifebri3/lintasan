@@ -81,7 +81,7 @@
                 </li>
                 <li class="flex items-center gap-2">
                     <i class="fas fa-envelope text-brand-orange shrink-0"></i>
-                    <span>{!! db_trans('footer_email', 'lintasan@lintassenyumanaknegeri.org', 'lintasan@lintassenyumanaknegeri.org') !!}</span>
+                    <span>{!! db_trans('footer_email', 'official@lintasan.or.id', 'official@lintasan.or.id') !!}</span>
                 </li>
             </ul>
         </div>

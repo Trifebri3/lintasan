@@ -203,7 +203,7 @@
                 <!-- Related Links Area -->
                 <div class="border-t border-gray-100 pt-6">
                     <label for="related_links" class="block text-xs font-bold text-gray-700 uppercase mb-2">Tautan Artikel Terkait / Kesamaan (Opsional, Satu link atau slug per baris)</label>
-                    <textarea id="related_links" name="related_links" rows="3" class="w-full border border-gray-200 rounded-lg px-4 py-2 text-xs focus:border-brand-green focus:ring-1 focus:ring-brand-green outline-none transition font-mono" placeholder="Masukkan link atau slug artikel, contoh:&#10;belajar-hari-ini-sukses-esok-hari&#10;https://lintassenyumanaknegeri.org/cerita-dampak/nelayan-kuat-ekonomi-naik">{{ old('related_links', $story->related_links) }}</textarea>
+                    <textarea id="related_links" name="related_links" rows="3" class="w-full border border-gray-200 rounded-lg px-4 py-2 text-xs focus:border-brand-green focus:ring-1 focus:ring-brand-green outline-none transition font-mono" placeholder="Masukkan link atau slug artikel, contoh:&#10;belajar-hari-ini-sukses-esok-hari&#10;https://lintasan.or.id/cerita-lapangan/nelayan-kuat-ekonomi-naik">{{ old('related_links', $story->related_links) }}</textarea>
                     <p class="text-[10px] text-gray-500 mt-1"><i class="fas fa-circle-info text-brand-green mr-1"></i> Admin bebas menentukan berita/artikel mana yang akan sama/terkait dengan memasukkan slug atau URL artikel di sini.</p>
                     @error('related_links') <p class="text-red-500 text-[10px] mt-1">{{ $message }}</p> @enderror
                 </div>
