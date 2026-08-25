@@ -1,0 +1,15 @@
+@extends('public.layout.app')
+
+@section('content')
+    @include('public.secion.hero')
+    @include('public.secion.how-we-work')
+    @include('public.secion.programs')
+    @include('public.secion.impact')
+    @include('public.secion.village-map')
+    @include('public.secion.stories')
+    @include('public.secion.gallery')
+    @include('public.secion.news-banner')
+    @include('public.secion.socials')
+    @include('public.secion.partners')
+    @include('public.secion.cta')
+@endsection

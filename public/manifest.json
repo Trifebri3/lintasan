@@ -1,0 +1,24 @@
+{
+  "name": "Yayasan LINTASAN Pesisir",
+  "short_name": "LINTASAN",
+  "description": "Yayasan Ketangguhan Pesisir - Dari Pesisir untuk Indonesia yang Lebih Tangguh",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F4F9F6",
+  "theme_color": "#007A48",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/images/logo-lintasan.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/logo-lintasan.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
