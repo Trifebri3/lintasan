@@ -9,33 +9,60 @@
             </div>
             
             <!-- Menu Links (Desktop) -->
-            <div class="hidden md:flex space-x-6 text-sm font-medium text-gray-600">
+            <div class="hidden md:flex items-center space-x-6 text-sm font-medium text-gray-600">
                 <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-brand-green border-b-2 border-brand-green pb-1 font-semibold' : 'hover:text-brand-green transition pb-1' }}">
                     {{ db_trans('menu_home', 'Beranda', 'Home') }}
                 </a>
-                <a href="{{ route('public.programs.index') }}" class="{{ request()->routeIs('public.programs.*') ? 'text-brand-green border-b-2 border-brand-green pb-1 font-semibold' : 'hover:text-brand-green transition pb-1' }}">
-                    {{ db_trans('menu_program', 'Program', 'Program') }}
-                </a>
-                <a href="{{ route('public.pages.desabinaan') }}" class="{{ request()->routeIs('public.pages.desabinaan') || request()->routeIs('public.pages.village.*') ? 'text-brand-green border-b-2 border-brand-green pb-1 font-semibold' : 'hover:text-brand-green transition pb-1' }}">
-                    {{ db_trans('menu_assisted_villages', 'Desa Mitra Lintasan', 'Partner Villages') }}
-                </a>
-                <a href="{{ route('public.stories.index') }}" class="{{ request()->routeIs('public.stories.*') ? 'text-brand-green border-b-2 border-brand-green pb-1 font-semibold' : 'hover:text-brand-green transition pb-1' }}">
-                    {{ db_trans('menu_impact_stories', 'Cerita Lapangan', 'Field Stories') }}
-                </a>
-                <a href="{{ route('public.pages.mitra') }}" class="{{ request()->routeIs('public.pages.mitra') ? 'text-brand-green border-b-2 border-brand-green pb-1 font-semibold' : 'hover:text-brand-green transition pb-1' }}">
-                    {{ db_trans('menu_partners', 'Mitra', 'Partners') }}
-                </a>
-                <a href="{{ route('public.pages.galeri') }}" class="{{ request()->routeIs('public.pages.galeri') ? 'text-brand-green border-b-2 border-brand-green pb-1 font-semibold' : 'hover:text-brand-green transition pb-1' }}">
-                    {{ db_trans('menu_gallery', 'Galeri', 'Gallery') }}
-                </a>
+
+                <!-- Dropdown 1: Program & Dampak -->
+                @php
+                    $isProgramActive = request()->routeIs('public.programs.*') || request()->routeIs('public.pages.desabinaan') || request()->routeIs('public.pages.village.*') || request()->routeIs('public.stories.*');
+                @endphp
+                <div class="relative group pb-1">
+                    <button class="hover:text-brand-green transition pb-1 flex items-center gap-1 {{ $isProgramActive ? 'text-brand-green border-b-2 border-brand-green font-semibold' : '' }}">
+                        <span>{{ db_trans('menu_programs_impact', 'Program & Dampak', 'Programs & Impact') }}</span>
+                        <i class="fas fa-chevron-down text-[10px] opacity-70 group-hover:rotate-180 transition-transform duration-300"></i>
+                    </button>
+                    <div class="absolute left-0 mt-1 w-48 bg-white border border-gray-150 rounded-xl shadow-lg py-2 hidden group-hover:block z-50 transition-all duration-300 animate-fadeIn">
+                        <a href="{{ route('public.programs.index') }}" class="block px-4 py-2.5 text-xs text-gray-700 hover:bg-green-50/55 hover:text-brand-green transition font-semibold">
+                            {{ db_trans('menu_program', 'Program', 'Program') }}
+                        </a>
+                        <a href="{{ route('public.pages.desabinaan') }}" class="block px-4 py-2.5 text-xs text-gray-700 hover:bg-green-50/55 hover:text-brand-green transition font-semibold">
+                            {{ db_trans('menu_assisted_villages', 'Desa Mitra Lintasan', 'Partner Villages') }}
+                        </a>
+                        <a href="{{ route('public.stories.index') }}" class="block px-4 py-2.5 text-xs text-gray-700 hover:bg-green-50/55 hover:text-brand-green transition font-semibold">
+                            {{ db_trans('menu_impact_stories', 'Cerita Lapangan', 'Field Stories') }}
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Dropdown 2: Tentang Kami -->
+                @php
+                    $isAboutActive = request()->routeIs('public.pages.tentangkami') || request()->routeIs('public.pages.mitra') || request()->routeIs('public.pages.galeri');
+                @endphp
+                <div class="relative group pb-1">
+                    <button class="hover:text-brand-green transition pb-1 flex items-center gap-1 {{ $isAboutActive ? 'text-brand-green border-b-2 border-brand-green font-semibold' : '' }}">
+                        <span>{{ db_trans('menu_about_us', 'Tentang Kami', 'About Us') }}</span>
+                        <i class="fas fa-chevron-down text-[10px] opacity-70 group-hover:rotate-180 transition-transform duration-300"></i>
+                    </button>
+                    <div class="absolute left-0 mt-1 w-48 bg-white border border-gray-150 rounded-xl shadow-lg py-2 hidden group-hover:block z-50 transition-all duration-300 animate-fadeIn">
+                        <a href="{{ route('public.pages.tentangkami') }}" class="block px-4 py-2.5 text-xs text-gray-700 hover:bg-green-50/55 hover:text-brand-green transition font-semibold">
+                            {{ db_trans('menu_about_us_profile', 'Profil Yayasan', 'Foundation Profile') }}
+                        </a>
+                        <a href="{{ route('public.pages.mitra') }}" class="block px-4 py-2.5 text-xs text-gray-700 hover:bg-green-50/55 hover:text-brand-green transition font-semibold">
+                            {{ db_trans('menu_partners', 'Mitra Kolaborasi', 'Collaborative Partners') }}
+                        </a>
+                        <a href="{{ route('public.pages.galeri') }}" class="block px-4 py-2.5 text-xs text-gray-700 hover:bg-green-50/55 hover:text-brand-green transition font-semibold">
+                            {{ db_trans('menu_gallery', 'Galeri Kegiatan', 'Activity Gallery') }}
+                        </a>
+                    </div>
+                </div>
+
                 <a href="{{ route('public.volunteer.index') }}" class="{{ request()->routeIs('public.volunteer.*') ? 'text-brand-green border-b-2 border-brand-green pb-1 font-semibold' : 'hover:text-brand-green transition pb-1' }}">
                     {{ db_trans('menu_volunteers', 'Relawan', 'Volunteers') }}
                 </a>
                 <a href="{{ route('public.donasi') }}" class="{{ request()->routeIs('public.donasi') ? 'text-brand-green border-b-2 border-brand-green pb-1 font-semibold' : 'hover:text-brand-green transition pb-1' }}">
                     {{ db_trans('menu_donation', 'Donasi', 'Donation') }}
-                </a>
-                <a href="{{ route('public.pages.tentangkami') }}" class="{{ request()->routeIs('public.pages.tentangkami') ? 'text-brand-green border-b-2 border-brand-green pb-1 font-semibold' : 'hover:text-brand-green transition pb-1' }}">
-                    {{ db_trans('menu_about_us', 'Tentang Kami', 'About Us') }}
                 </a>
             </div>
             
