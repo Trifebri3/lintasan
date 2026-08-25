@@ -34,8 +34,8 @@ class SettingController extends Controller
         Setting::firstOrCreate(
             ['key' => 'title_impact'],
             [
-                'value_id' => 'Sebaran Wilayah Binaan',
-                'value_en' => 'Assisted Territory',
+                'value_id' => 'Lintasan Dalam Angka',
+                'value_en' => 'Lintasan in Numbers',
                 'type' => 'text'
             ]
         );

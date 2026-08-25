@@ -27,7 +27,7 @@
                     'about_pillar_inovasi' => 'Jelaskan inovasi tepat guna (seperti solar freezer / energi surya) yang diaplikasikan.',
                     'about_pillar_transparansi' => 'Jelaskan komitmen keterbukaan informasi dan akuntabilitas pelaporan program.',
                     'about_conclusion' => 'Tuliskan paragraf kesimpulan penutup untuk profil tentang kami.',
-                    'title_impact' => 'Tuliskan judul bagian statistik dampak yang akan tampil di halaman beranda (contoh: Sebaran Wilayah Binaan).',
+                    'title_impact' => 'Tuliskan judul bagian statistik dampak yang akan tampil di halaman beranda (contoh: Lintasan Dalam Angka).',
                     'bg_photo_impact' => 'Upload foto latar belakang untuk bagian statistik dampak pesisir. Rekomendasi dimensi: 1920x1080px (Lansekap), format JPG/PNG, ukuran file maks 3MB.',
                     'bg_photo_cta' => 'Upload foto latar belakang untuk banner ajakan gabung di footer. Rekomendasi dimensi: 1920x800px (Lansekap), format JPG/PNG, ukuran file maks 3MB.',
                 ];

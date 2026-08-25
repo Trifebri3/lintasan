@@ -369,7 +369,7 @@ class LINTASANDatabaseSeeder extends Seeder
         // 7. Seed Admin and Contributor Users
         \App\Models\User::create([
             'name' => 'Administrator LINTASAN',
-            'email' => 'admin@lintasan.org',
+            'email' => 'official@lintasan.or.id',
             'password' => \Illuminate\Support\Facades\Hash::make('password'),
             'role' => 'admin',
         ]);

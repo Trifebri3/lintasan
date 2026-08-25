@@ -15,7 +15,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 scroll-animate">
         <div class="flex justify-between items-end border-b border-gray-100 pb-3">
             <h2 class="text-xl font-extrabold text-gray-900">
-                {{ $settings['title_impact'] ?? db_trans('title_impact', 'Sebaran Wilayah Binaan', 'Assisted Territory') }}
+                {{ $settings['title_impact'] ?? db_trans('title_impact', 'Lintasan Dalam Angka', 'Lintasan in Numbers') }}
             </h2>
             <a href="{{ route('public.stories.index') }}" class="text-[10px] text-brand-green font-semibold hover:underline flex items-center gap-1 transition">
                 {{ db_trans('impact_view_details', 'Lihat Detail Dampak', 'View Impact Details') }} <i class="fas fa-arrow-right text-[8px]"></i>

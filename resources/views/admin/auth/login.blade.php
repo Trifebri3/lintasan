@@ -53,7 +53,7 @@
                         <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-gray-400">
                             <i class="fas fa-envelope"></i>
                         </span>
-                        <input type="email" id="email" name="email" required value="{{ old('email') }}" class="w-full border border-gray-200 rounded-lg pl-10 pr-4 py-2.5 focus:border-brand-green focus:ring-1 focus:ring-brand-green outline-none transition" placeholder="email@lintasan.org">
+                        <input type="email" id="email" name="email" required value="{{ old('email') }}" class="w-full border border-gray-200 rounded-lg pl-10 pr-4 py-2.5 focus:border-brand-green focus:ring-1 focus:ring-brand-green outline-none transition" placeholder="official@lintasan.or.id">
                     </div>
                     @error('email') <p class="text-red-500 text-[10px] mt-1">{{ $message }}</p> @enderror
                 </div>
