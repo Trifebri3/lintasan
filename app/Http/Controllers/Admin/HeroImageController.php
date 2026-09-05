@@ -41,25 +41,30 @@ class HeroImageController extends Controller
             'sort_order' => 'required|integer',
             'is_active' => 'required|boolean',
             'button_link' => 'nullable|string|max:255',
-        ]);
+        ], $this->validationMessages(true));
 
-        $imagePath = '';
-        if ($request->hasFile('image')) {
-            $imagePath = \App\Helpers\ImageHelper::compressAndSave($request->file('image'), 'hero', 'slide');
+        try {
+            $imagePath = '';
+            if ($request->hasFile('image')) {
+                $imagePath = \App\Helpers\ImageHelper::compressAndSave($request->file('image'), 'hero', 'slide');
+            }
+
+            HeroImage::create([
+                'image_path' => $imagePath,
+                'title_id' => $request->title_id,
+                'title_en' => $request->title_en,
+                'subtitle_id' => $request->subtitle_id,
+                'subtitle_en' => $request->subtitle_en,
+                'sort_order' => $request->sort_order,
+                'is_active' => $request->is_active,
+                'button_link' => $request->button_link,
+            ]);
+
+            return redirect()->route('admin.hero-images.index')->with('success', 'Slide Hero baru berhasil ditambahkan.');
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Gagal menambahkan slide hero: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan slide hero: ' . $e->getMessage());
         }
-
-        HeroImage::create([
-            'image_path' => $imagePath,
-            'title_id' => $request->title_id,
-            'title_en' => $request->title_en,
-            'subtitle_id' => $request->subtitle_id,
-            'subtitle_en' => $request->subtitle_en,
-            'sort_order' => $request->sort_order,
-            'is_active' => $request->is_active,
-            'button_link' => $request->button_link,
-        ]);
-
-        return redirect()->route('admin.hero-images.index')->with('success', 'Slide Hero baru berhasil ditambahkan.');
     }
 
     /**
@@ -87,35 +92,32 @@ class HeroImageController extends Controller
             'sort_order' => 'required|integer',
             'is_active' => 'required|boolean',
             'button_link' => 'nullable|string|max:255',
-        ]);
+        ], $this->validationMessages(false));
 
-        if ($request->hasFile('image')) {
-            // Delete old file if local
-            if ($slide->image_path) {
-                if (str_starts_with($slide->image_path, '/storage/')) {
-                    $relativePath = str_replace('/storage/', '', $slide->image_path);
-                    if (Storage::disk('public')->exists($relativePath)) {
-                        Storage::disk('public')->delete($relativePath);
-                    }
-                } elseif (File::exists(public_path($slide->image_path))) {
-                    File::delete(public_path($slide->image_path));
-                }
+        try {
+            $imagePath = $slide->image_path;
+            if ($request->hasFile('image')) {
+                // Delete old file if local
+                \App\Helpers\ImageHelper::deleteFile($slide->image_path);
+                $imagePath = \App\Helpers\ImageHelper::compressAndSave($request->file('image'), 'hero', 'slide');
             }
 
-            $slide->image_path = \App\Helpers\ImageHelper::compressAndSave($request->file('image'), 'hero', 'slide');
+            $slide->update([
+                'image_path' => $imagePath,
+                'title_id' => $request->title_id,
+                'title_en' => $request->title_en,
+                'subtitle_id' => $request->subtitle_id,
+                'subtitle_en' => $request->subtitle_en,
+                'sort_order' => $request->sort_order,
+                'is_active' => $request->is_active,
+                'button_link' => $request->button_link,
+            ]);
+
+            return redirect()->route('admin.hero-images.index')->with('success', 'Slide Hero berhasil diperbarui.');
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Gagal memperbarui slide hero: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Gagal memperbarui slide hero: ' . $e->getMessage());
         }
-
-        $slide->update([
-            'title_id' => $request->title_id,
-            'title_en' => $request->title_en,
-            'subtitle_id' => $request->subtitle_id,
-            'subtitle_en' => $request->subtitle_en,
-            'sort_order' => $request->sort_order,
-            'is_active' => $request->is_active,
-            'button_link' => $request->button_link,
-        ]);
-
-        return redirect()->route('admin.hero-images.index')->with('success', 'Slide Hero berhasil diperbarui.');
     }
 
     /**
@@ -125,19 +127,31 @@ class HeroImageController extends Controller
     {
         $slide = HeroImage::findOrFail($id);
 
-        if ($slide->image_path) {
-            if (str_starts_with($slide->image_path, '/storage/')) {
-                $relativePath = str_replace('/storage/', '', $slide->image_path);
-                if (Storage::disk('public')->exists($relativePath)) {
-                    Storage::disk('public')->delete($relativePath);
-                }
-            } elseif (File::exists(public_path($slide->image_path))) {
-                File::delete(public_path($slide->image_path));
-            }
-        }
+        \App\Helpers\ImageHelper::deleteFile($slide->image_path);
 
         $slide->delete();
 
         return redirect()->route('admin.hero-images.index')->with('success', 'Slide Hero berhasil dihapus.');
+    }
+
+    /**
+     * Custom Indonesian validation messages for hero slides.
+     */
+    private function validationMessages(bool $isCreate = true): array
+    {
+        return [
+            'image.required' => 'File gambar slide hero wajib diunggah.',
+            'image.image' => 'Berkas slide harus berupa file gambar.',
+            'image.mimes' => 'Format gambar slide harus JPG, JPEG, PNG, WEBP, atau SVG.',
+            'image.max' => 'Ukuran gambar slide tidak boleh melebihi 4 MB (4096 KB).',
+            'image.uploaded' => 'Gagal mengunggah gambar slide. Ukuran file kemungkinan melebihi kapasitas server.',
+            'title_id.required' => 'Judul utama slogan (Bahasa Indonesia) wajib diisi.',
+            'title_en.required' => 'Judul utama slogan (Bahasa Inggris) wajib diisi.',
+            'subtitle_id.required' => 'Deskripsi sub-slogan (Bahasa Indonesia) wajib diisi.',
+            'subtitle_en.required' => 'Deskripsi sub-slogan (Bahasa Inggris) wajib diisi.',
+            'sort_order.required' => 'Urutan tampil slide wajib diisi.',
+            'sort_order.integer' => 'Urutan tampil harus berupa angka.',
+            'is_active.required' => 'Status visibilitas slide wajib ditentukan.',
+        ];
     }
 }

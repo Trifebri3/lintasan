@@ -38,30 +38,35 @@ class VillageController extends Controller
             'location' => 'required|string|max:255',
             'description' => 'required|string',
             'narrative' => 'required|string',
-            'image_path' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image_path' => 'required|image|mimes:jpeg,png,jpg,gif,webp,svg|max:4096',
             'map_iframe' => 'nullable|string',
             'latitude' => 'nullable|numeric|between:-90,90',
             'longitude' => 'nullable|numeric|between:-180,180',
-        ]);
+        ], $this->validationMessages(true));
 
-        $image_path = '';
-        if ($request->hasFile('image_path')) {
-            $image_path = \App\Helpers\ImageHelper::compressAndSave($request->file('image_path'), 'villages', $request->name);
+        try {
+            $image_path = '';
+            if ($request->hasFile('image_path')) {
+                $image_path = \App\Helpers\ImageHelper::compressAndSave($request->file('image_path'), 'villages', $request->name);
+            }
+
+            Village::create([
+                'name' => $request->name,
+                'slug' => Str::slug($request->name),
+                'location' => $request->location,
+                'description' => $request->description,
+                'narrative' => $request->narrative,
+                'image_path' => $image_path,
+                'map_iframe' => $request->map_iframe,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+            ]);
+
+            return redirect()->route('admin.villages.index')->with('success', 'Desa mitra lintasan berhasil ditambahkan.');
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Gagal menambahkan desa mitra: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan desa mitra: ' . $e->getMessage());
         }
-
-        Village::create([
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
-            'location' => $request->location,
-            'description' => $request->description,
-            'narrative' => $request->narrative,
-            'image_path' => $image_path,
-            'map_iframe' => $request->map_iframe,
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-        ]);
-
-        return redirect()->route('admin.villages.index')->with('success', 'Desa mitra lintasan berhasil ditambahkan.');
     }
 
     /**
@@ -85,42 +90,37 @@ class VillageController extends Controller
             'location' => 'required|string|max:255',
             'description' => 'required|string',
             'narrative' => 'required|string',
-            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:4096',
             'map_iframe' => 'nullable|string',
             'latitude' => 'nullable|numeric|between:-90,90',
             'longitude' => 'nullable|numeric|between:-180,180',
-        ]);
+        ], $this->validationMessages(false));
 
-        $image_path = $village->image_path;
-        if ($request->hasFile('image_path')) {
-            // Delete old file
-            if ($village->image_path) {
-                if (str_starts_with($village->image_path, '/storage/')) {
-                    $relativePath = str_replace('/storage/', '', $village->image_path);
-                    if (Storage::disk('public')->exists($relativePath)) {
-                        Storage::disk('public')->delete($relativePath);
-                    }
-                } elseif (File::exists(public_path($village->image_path))) {
-                    File::delete(public_path($village->image_path));
-                }
+        try {
+            $image_path = $village->image_path;
+            if ($request->hasFile('image_path')) {
+                // Delete old file
+                \App\Helpers\ImageHelper::deleteFile($village->image_path);
+                $image_path = \App\Helpers\ImageHelper::compressAndSave($request->file('image_path'), 'villages', $request->name);
             }
 
-            $image_path = \App\Helpers\ImageHelper::compressAndSave($request->file('image_path'), 'villages', $request->name);
+            $village->update([
+                'name' => $request->name,
+                'slug' => Str::slug($request->name),
+                'location' => $request->location,
+                'description' => $request->description,
+                'narrative' => $request->narrative,
+                'image_path' => $image_path,
+                'map_iframe' => $request->map_iframe,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+            ]);
+
+            return redirect()->route('admin.villages.index')->with('success', 'Desa mitra lintasan berhasil diperbarui.');
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Gagal memperbarui desa mitra: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Gagal memperbarui desa mitra: ' . $e->getMessage());
         }
-
-        $village->update([
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
-            'location' => $request->location,
-            'description' => $request->description,
-            'narrative' => $request->narrative,
-            'image_path' => $image_path,
-            'map_iframe' => $request->map_iframe,
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-        ]);
-
-        return redirect()->route('admin.villages.index')->with('success', 'Desa mitra lintasan berhasil diperbarui.');
     }
 
     /**
@@ -131,19 +131,32 @@ class VillageController extends Controller
         $village = Village::findOrFail($id);
         
         // Delete associated image file
-        if ($village->image_path) {
-            if (str_starts_with($village->image_path, '/storage/')) {
-                $relativePath = str_replace('/storage/', '', $village->image_path);
-                if (Storage::disk('public')->exists($relativePath)) {
-                    Storage::disk('public')->delete($relativePath);
-                }
-            } elseif (File::exists(public_path($village->image_path))) {
-                File::delete(public_path($village->image_path));
-            }
-        }
+        \App\Helpers\ImageHelper::deleteFile($village->image_path);
 
         $village->delete();
 
         return redirect()->route('admin.villages.index')->with('success', 'Desa mitra lintasan berhasil dihapus.');
+    }
+
+    /**
+     * Custom Indonesian validation messages for villages.
+     */
+    private function validationMessages(bool $isCreate = true): array
+    {
+        return [
+            'name.required' => 'Nama desa wajib diisi.',
+            'location.required' => 'Lokasi / kabupaten desa wajib diisi.',
+            'description.required' => 'Rangkuman singkat desa wajib diisi.',
+            'narrative.required' => 'Kisah lengkap narasi desa wajib diisi.',
+            'image_path.required' => 'Foto utama desa wajib diunggah.',
+            'image_path.image' => 'Berkas foto utama desa harus berupa gambar.',
+            'image_path.mimes' => 'Format foto desa harus JPG, JPEG, PNG, WEBP, GIF, atau SVG.',
+            'image_path.max' => 'Ukuran foto desa tidak boleh melebihi 4 MB (4096 KB).',
+            'image_path.uploaded' => 'Gagal mengunggah foto desa. Ukuran file kemungkinan melebihi batas upload server.',
+            'latitude.numeric' => 'Nilai koordinat latitude harus berupa angka desimal.',
+            'latitude.between' => 'Titik latitude harus berada dalam rentang -90 sampai 90.',
+            'longitude.numeric' => 'Nilai koordinat longitude harus berupa angka desimal.',
+            'longitude.between' => 'Titik longitude harus berada dalam rentang -180 sampai 180.',
+        ];
     }
 }

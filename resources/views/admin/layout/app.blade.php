@@ -153,17 +153,60 @@
 
         <!-- Content Page -->
         <main class="flex-grow p-6 md:p-8">
+            <!-- Global Flash Success Alert -->
+            @if(session('success'))
+                <div class="max-w-6xl mx-auto mb-6 bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-xl text-xs font-semibold shadow-sm flex items-start justify-between gap-3">
+                    <div class="flex items-start gap-2.5">
+                        <i class="fas fa-circle-check text-base text-emerald-600 mt-0.5 shrink-0"></i>
+                        <div>
+                            <div class="font-bold text-sm text-emerald-900">Operasi Berhasil</div>
+                            <div class="text-xs font-medium text-emerald-700 mt-0.5 leading-relaxed">{{ session('success') }}</div>
+                        </div>
+                    </div>
+                    <button type="button" onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-800 text-sm font-bold">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            @endif
+
+            <!-- Global Flash Error Alert -->
+            @if(session('error'))
+                <div class="max-w-6xl mx-auto mb-6 bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-xs shadow-sm flex items-start justify-between gap-3">
+                    <div class="flex items-start gap-2.5">
+                        <i class="fas fa-circle-xmark text-lg text-red-600 mt-0.5 shrink-0"></i>
+                        <div>
+                            <div class="font-extrabold text-sm text-red-900 flex items-center gap-1.5">
+                                Gagal Menyimpan Data / Berkas
+                            </div>
+                            <div class="text-xs font-medium text-red-700 mt-1 whitespace-pre-line leading-relaxed">
+                                {{ session('error') }}
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" onclick="this.parentElement.remove()" class="text-red-400 hover:text-red-700 text-sm font-bold">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            @endif
+
             <!-- Global Form Validation Failure Warnings -->
             @if($errors->any())
                 <div class="max-w-6xl mx-auto mb-6 bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl text-xs font-semibold shadow-sm">
-                    <div class="font-extrabold text-sm mb-1.5 flex items-center gap-1.5 text-red-800">
-                        <i class="fas fa-triangle-exclamation text-base"></i> Terjadi Kesalahan Pengisian Form:
+                    <div class="font-extrabold text-sm mb-2 flex items-center justify-between text-red-800">
+                        <span class="flex items-center gap-1.5">
+                            <i class="fas fa-triangle-exclamation text-base text-red-600"></i> Terjadi Kesalahan Validasi Formulir ({{ $errors->count() }} Isian Gagal):
+                        </span>
+                        <span class="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-bold">Perlu Diperbaiki</span>
                     </div>
                     <ul class="list-disc pl-5 space-y-1 font-medium">
                         @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
+                            <li class="leading-relaxed">{{ $error }}</li>
                         @endforeach
                     </ul>
+                    <div class="mt-3 pt-2.5 border-t border-red-200/60 text-[10px] text-red-600 flex items-center gap-1.5 font-normal">
+                        <i class="fas fa-circle-info text-red-500"></i> 
+                        <strong>Petunjuk Debug:</strong> Pastikan format file foto berupa JPG, PNG, atau WEBP dan tidak melebihi batas upload PHP server (2 MB).
+                    </div>
                 </div>
             @endif
 
@@ -174,6 +217,8 @@
         @include('admin.layout.footer')
     </div>
 
+    <!-- Image Upload Inspector & Client Auto-Compressor -->
+    <script src="{{ asset('js/image-upload-helper.js') }}"></script>
     @yield('scripts')
 </body>
 </html>

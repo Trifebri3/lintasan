@@ -131,6 +131,11 @@
                     <input type="file" id="gallery" name="gallery[]" multiple class="w-full border border-gray-200 rounded-lg p-2.5 outline-none focus:border-brand-green text-xs file:mr-4 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:text-[10px] file:font-semibold file:bg-green-50 file:text-brand-green hover:file:bg-green-100">
                     <p class="text-[10px] text-gray-500 mt-1"><i class="fas fa-circle-info text-brand-green mr-1"></i> File foto yang diunggah akan otomatis dikompresi.</p>
                     @error('gallery') <p class="text-red-500 text-[10px] mt-1">{{ $message }}</p> @enderror
+                    @foreach($errors->get('gallery.*') as $messages)
+                        @foreach($messages as $msg)
+                            <p class="text-red-500 text-[10px] mt-1 font-semibold"><i class="fas fa-circle-exclamation mr-1"></i> {{ $msg }}</p>
+                        @endforeach
+                    @endforeach
                 </div>
 
                 <!-- YouTube Links Area -->

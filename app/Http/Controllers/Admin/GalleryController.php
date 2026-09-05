@@ -45,41 +45,42 @@ class GalleryController extends Controller
             $rules['video_url'] = 'required|url';
         }
 
-        $validated = $request->validate($rules, [
-            'image_file.required' => 'File gambar wajib diunggah.',
-            'video_url.required' => 'URL link YouTube wajib diisi.',
-            'video_url.url' => 'URL link YouTube tidak valid.',
-        ]);
+        $validated = $request->validate($rules, $this->validationMessages());
 
-        $image_path = null;
-        $video_url = null;
-        $youtube_id = null;
-        $embed_url = null;
+        try {
+            $image_path = null;
+            $video_url = null;
+            $youtube_id = null;
+            $embed_url = null;
 
-        if ($request->type === 'image') {
-            $image_path = \App\Helpers\ImageHelper::compressAndSave($request->file('image_file'), 'gallery', $request->title_id ?? 'gallery');
-        } else {
-            $video_url = $request->video_url;
-            $youtube_id = $this->getYoutubeId($video_url);
-            if ($youtube_id) {
-                $embed_url = 'https://www.youtube.com/embed/' . $youtube_id;
+            if ($request->type === 'image') {
+                $image_path = \App\Helpers\ImageHelper::compressAndSave($request->file('image_file'), 'gallery', $request->title_id ?? 'gallery');
             } else {
-                return back()->withErrors(['video_url' => 'Format link YouTube tidak valid. Harap gunakan URL video YouTube yang benar.'])->withInput();
+                $video_url = $request->video_url;
+                $youtube_id = $this->getYoutubeId($video_url);
+                if ($youtube_id) {
+                    $embed_url = 'https://www.youtube.com/embed/' . $youtube_id;
+                } else {
+                    return back()->withErrors(['video_url' => 'Format link YouTube tidak valid. Harap gunakan URL video YouTube yang benar.'])->withInput();
+                }
             }
+
+            Gallery::create([
+                'title_id' => $request->title_id,
+                'title_en' => $request->title_en,
+                'type' => $request->type,
+                'image_path' => $image_path,
+                'video_url' => $video_url,
+                'youtube_id' => $youtube_id,
+                'embed_url' => $embed_url,
+                'sort_order' => $request->sort_order,
+            ]);
+
+            return redirect()->route('admin.galleries.index')->with('success', 'Item galeri berhasil ditambahkan.');
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Gagal menambahkan item galeri: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan item galeri: ' . $e->getMessage());
         }
-
-        Gallery::create([
-            'title_id' => $request->title_id,
-            'title_en' => $request->title_en,
-            'type' => $request->type,
-            'image_path' => $image_path,
-            'video_url' => $video_url,
-            'youtube_id' => $youtube_id,
-            'embed_url' => $embed_url,
-            'sort_order' => $request->sort_order,
-        ]);
-
-        return redirect()->route('admin.galleries.index')->with('success', 'Item galeri berhasil ditambahkan.');
     }
 
     /**
@@ -107,57 +108,59 @@ class GalleryController extends Controller
 
         if ($request->type === 'image' && !$item->image_path) {
             $rules['image_file'] = 'required|image|mimes:jpeg,png,jpg,gif,webp,svg|max:4096';
+        } elseif ($request->type === 'image') {
+            $rules['image_file'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:4096';
         } elseif ($request->type === 'video') {
             $rules['video_url'] = 'required|url';
         }
 
-        $request->validate($rules, [
-            'image_file.required' => 'File gambar wajib diunggah.',
-            'video_url.required' => 'URL link YouTube wajib diisi.',
-            'video_url.url' => 'URL link YouTube tidak valid.',
-        ]);
+        $request->validate($rules, $this->validationMessages());
 
-        $image_path = $item->image_path;
-        $video_url = $item->video_url;
-        $youtube_id = $item->youtube_id;
-        $embed_url = $item->embed_url;
+        try {
+            $image_path = $item->image_path;
+            $video_url = $item->video_url;
+            $youtube_id = $item->youtube_id;
+            $embed_url = $item->embed_url;
 
-        if ($request->type === 'image') {
-            if ($request->hasFile('image_file')) {
-                // Delete old image if exists
-                $this->deletePhysicalFile($item->image_path);
-                
-                $image_path = \App\Helpers\ImageHelper::compressAndSave($request->file('image_file'), 'gallery', $request->title_id ?? 'gallery');
-            }
-            $video_url = null;
-            $youtube_id = null;
-            $embed_url = null;
-        } else {
-            // Delete old image if it is switching from image to video
-            $this->deletePhysicalFile($item->image_path);
-            $image_path = null;
-
-            $video_url = $request->video_url;
-            $youtube_id = $this->getYoutubeId($video_url);
-            if ($youtube_id) {
-                $embed_url = 'https://www.youtube.com/embed/' . $youtube_id;
+            if ($request->type === 'image') {
+                if ($request->hasFile('image_file')) {
+                    // Delete old image if exists
+                    \App\Helpers\ImageHelper::deleteFile($item->image_path);
+                    $image_path = \App\Helpers\ImageHelper::compressAndSave($request->file('image_file'), 'gallery', $request->title_id ?? 'gallery');
+                }
+                $video_url = null;
+                $youtube_id = null;
+                $embed_url = null;
             } else {
-                return back()->withErrors(['video_url' => 'Format link YouTube tidak valid. Harap gunakan URL video YouTube yang benar.'])->withInput();
+                // Delete old image if it is switching from image to video
+                \App\Helpers\ImageHelper::deleteFile($item->image_path);
+                $image_path = null;
+
+                $video_url = $request->video_url;
+                $youtube_id = $this->getYoutubeId($video_url);
+                if ($youtube_id) {
+                    $embed_url = 'https://www.youtube.com/embed/' . $youtube_id;
+                } else {
+                    return back()->withErrors(['video_url' => 'Format link YouTube tidak valid. Harap gunakan URL video YouTube yang benar.'])->withInput();
+                }
             }
+
+            $item->update([
+                'title_id' => $request->title_id,
+                'title_en' => $request->title_en,
+                'type' => $request->type,
+                'image_path' => $image_path,
+                'video_url' => $video_url,
+                'youtube_id' => $youtube_id,
+                'embed_url' => $embed_url,
+                'sort_order' => $request->sort_order,
+            ]);
+
+            return redirect()->route('admin.galleries.index')->with('success', 'Item galeri berhasil diperbarui.');
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Gagal memperbarui item galeri: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Gagal memperbarui item galeri: ' . $e->getMessage());
         }
-
-        $item->update([
-            'title_id' => $request->title_id,
-            'title_en' => $request->title_en,
-            'type' => $request->type,
-            'image_path' => $image_path,
-            'video_url' => $video_url,
-            'youtube_id' => $youtube_id,
-            'embed_url' => $embed_url,
-            'sort_order' => $request->sort_order,
-        ]);
-
-        return redirect()->route('admin.galleries.index')->with('success', 'Item galeri berhasil diperbarui.');
     }
 
     /**
@@ -168,7 +171,7 @@ class GalleryController extends Controller
         $item = Gallery::findOrFail($id);
         
         if ($item->type === 'image') {
-            $this->deletePhysicalFile($item->image_path);
+            \App\Helpers\ImageHelper::deleteFile($item->image_path);
         }
 
         $item->delete();
@@ -177,20 +180,23 @@ class GalleryController extends Controller
     }
 
     /**
-     * Delete physical image file from public storage.
+     * Custom Indonesian validation messages for gallery items.
      */
-    private function deletePhysicalFile($path)
+    private function validationMessages(): array
     {
-        if ($path) {
-            if (str_starts_with($path, '/storage/')) {
-                $relativePath = str_replace('/storage/', '', $path);
-                if (Storage::disk('public')->exists($relativePath)) {
-                    Storage::disk('public')->delete($relativePath);
-                }
-            } elseif (File::exists(public_path($path))) {
-                File::delete(public_path($path));
-            }
-        }
+        return [
+            'type.required' => 'Tipe dokumentasi galeri (Foto atau Video) wajib dipilih.',
+            'type.in' => 'Tipe dokumentasi harus berupa image (foto) atau video.',
+            'image_file.required' => 'File foto galeri wajib diunggah.',
+            'image_file.image' => 'Berkas yang diunggah harus berupa file gambar.',
+            'image_file.mimes' => 'Format foto harus JPG, JPEG, PNG, WEBP, GIF, atau SVG.',
+            'image_file.max' => 'Ukuran foto galeri tidak boleh melebihi 4 MB (4096 KB).',
+            'image_file.uploaded' => 'Gagal mengunggah foto galeri. Ukuran berkas kemungkinan melebihi kapasitas server.',
+            'video_url.required' => 'Tautan URL video YouTube wajib diisi.',
+            'video_url.url' => 'Format tautan link YouTube tidak valid (contoh: https://www.youtube.com/watch?v=...).',
+            'sort_order.required' => 'Urutan tampil wajib diisi.',
+            'sort_order.integer' => 'Urutan tampil harus berupa angka.',
+        ];
     }
 
     /**

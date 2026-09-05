@@ -13,7 +13,7 @@
                     return \App\Models\SocialLink::where('is_active', true)->orderBy('sort_order')->get()->toArray();
                 });
             @endphp
-            <div class="flex space-x-4 text-base">
+            <div class="flex space-x-4 text-base mb-6">
                 @foreach($activeSocialLinks as $link)
                     @php
                         $platform = strtolower($link['platform']);
@@ -31,6 +31,23 @@
                         <i class="{{ $iconClass }}"></i>
                     </a>
                 @endforeach
+            </div>
+
+            <!-- Powered By Section -->
+            <div class="pt-4 border-t border-white/10">
+                <span class="text-[10px] font-semibold tracking-widest text-gray-400/90 uppercase block mb-2">POWERED BY</span>
+                <div class="flex items-center gap-2.5 mb-2">
+                    <a href="https://community.siyota.org" target="_blank" rel="noopener noreferrer" class="inline-block hover:opacity-100 transition" title="The Community Space by YOTA">
+                        <img src="https://community.siyota.org/csyota.webp" onerror="this.onerror=null; this.src='/images/csyota.webp';" alt="The Community Space by YOTA" class="h-5 w-auto object-contain brightness-0 invert opacity-80 hover:opacity-100 transition">
+                    </a>
+                    <div class="h-4 w-px bg-white/20"></div>
+                    <a href="https://siyota.org" target="_blank" rel="noopener noreferrer" class="inline-block hover:opacity-100 transition" title="Yayasan Yota Wujudkan Asa">
+                        <img src="https://siyota.org/image/logo.png" onerror="this.onerror=null; this.src='/images/siyota-logo.png';" alt="Yayasan Yota Wujudkan Asa" class="h-5 w-auto object-contain brightness-0 invert opacity-80 hover:opacity-100 transition">
+                    </a>
+                </div>
+                <p class="text-[11px] leading-relaxed text-gray-400/80">
+                    {!! db_trans('footer_powered_by_desc', 'Inisiatif sosial Yayasan Yota Wujudkan Asa dalam bidang teknologi & kearifan lokal.', 'Social initiative of Yayasan Yota Wujudkan Asa in technology & local wisdom.') !!}
+                </p>
             </div>
         </div>
         

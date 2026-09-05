@@ -77,3 +77,13 @@ Route::middleware('admin.auth')->prefix('admin')->name('admin.')->group(function
         Route::delete('volunteers/{id}', [\App\Http\Controllers\Admin\VolunteerController::class, 'destroy'])->name('volunteers.destroy');
     });
 });
+
+// Direct storage fallback route: guarantees images are served even if Windows symlink is broken
+Route::get('/storage/{path}', function ($path) {
+    $disk = \Illuminate\Support\Facades\Storage::disk('public');
+    $filePath = $disk->path($path);
+    if (!file_exists($filePath)) {
+        abort(404);
+    }
+    return response()->file($filePath);
+})->where('path', '.*')->name('storage.fallback');

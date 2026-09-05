@@ -75,6 +75,9 @@
                             @else
                                 <input type="text" name="value_id" required value="{{ $setting->value_id }}" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 focus:border-brand-green focus:ring-1 focus:ring-brand-green outline-none transition">
                             @endif
+                            @error('value_id')
+                                <p class="text-red-500 text-[10px] mt-1 font-semibold"><i class="fas fa-circle-exclamation mr-1"></i> {{ $message }}</p>
+                            @enderror
                         </div>
 
                         <!-- English value -->
@@ -99,6 +102,9 @@
                             @else
                                 <input type="text" name="value_en" required value="{{ $setting->value_en }}" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 focus:border-brand-green focus:ring-1 focus:ring-brand-green outline-none transition">
                             @endif
+                            @error('value_en')
+                                <p class="text-red-500 text-[10px] mt-1 font-semibold"><i class="fas fa-circle-exclamation mr-1"></i> {{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
 

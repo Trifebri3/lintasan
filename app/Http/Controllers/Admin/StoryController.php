@@ -51,74 +51,79 @@ class StoryController extends Controller
             'youtube_links' => 'nullable|string',
             'program_id' => 'nullable|exists:programs,id',
             'related_links' => 'nullable|string',
-        ]);
+        ], $this->validationMessages());
 
-        $gallery = [];
-        
-        // 1. Process uploaded images with compression
-        if ($request->hasFile('gallery')) {
-            foreach ($request->file('gallery') as $file) {
-                $path = \App\Helpers\ImageHelper::compressAndSave($file, 'stories', 'gallery');
-                $gallery[] = [
-                    'type' => 'image',
-                    'path' => $path
-                ];
-            }
-        }
-
-        // 2. Process YouTube video links
-        if ($request->filled('youtube_links')) {
-            $links = explode("\n", str_replace("\r", "", $request->youtube_links));
-            foreach ($links as $link) {
-                $link = trim($link);
-                if (empty($link)) continue;
-
-                $youtubeId = $this->getYoutubeId($link);
-                if ($youtubeId) {
+        try {
+            $gallery = [];
+            
+            // 1. Process uploaded images with compression
+            if ($request->hasFile('gallery')) {
+                foreach ($request->file('gallery') as $file) {
+                    $path = \App\Helpers\ImageHelper::compressAndSave($file, 'stories', 'gallery');
                     $gallery[] = [
-                        'type' => 'video',
-                        'path' => $link,
-                        'youtube_id' => $youtubeId,
-                        'embed_url' => 'https://www.youtube.com/embed/' . $youtubeId,
-                        'thumbnail' => 'https://img.youtube.com/vi/' . $youtubeId . '/hqdefault.jpg'
+                        'type' => 'image',
+                        'path' => $path
                     ];
                 }
             }
+
+            // 2. Process YouTube video links
+            if ($request->filled('youtube_links')) {
+                $links = explode("\n", str_replace("\r", "", $request->youtube_links));
+                foreach ($links as $link) {
+                    $link = trim($link);
+                    if (empty($link)) continue;
+
+                    $youtubeId = $this->getYoutubeId($link);
+                    if ($youtubeId) {
+                        $gallery[] = [
+                            'type' => 'video',
+                            'path' => $link,
+                            'youtube_id' => $youtubeId,
+                            'embed_url' => 'https://www.youtube.com/embed/' . $youtubeId,
+                            'thumbnail' => 'https://img.youtube.com/vi/' . $youtubeId . '/hqdefault.jpg'
+                        ];
+                    }
+                }
+            }
+
+            // Auto-assign colors depending on category
+            $category = $request->category_id;
+            $category_bg = 'bg-gray-100';
+            $category_color = 'text-gray-700';
+
+            if (stripos($category, 'spab') !== false) {
+                $category_bg = 'bg-orange-100';
+                $category_color = 'text-brand-orange';
+            } elseif (stripos($category, 'tabur') !== false || stripos($category, 'laut') !== false || stripos($category, 'nelayan') !== false) {
+                $category_bg = 'bg-emerald-100';
+                $category_color = 'text-emerald-700';
+            } elseif (stripos($category, 'smk') !== false) {
+                $category_bg = 'bg-blue-100';
+                $category_color = 'text-blue-700';
+            } elseif (stripos($category, 'hutan') !== false || stripos($category, 'tanaman') !== false || stripos($category, 'pohon') !== false) {
+                $category_bg = 'bg-green-100';
+                $category_color = 'text-green-700';
+            }
+
+            $image_url = '';
+            if ($request->hasFile('image_url')) {
+                $image_url = \App\Helpers\ImageHelper::compressAndSave($request->file('image_url'), 'stories', 'thumb');
+            }
+
+            Story::create(array_merge($validated, [
+                'image_url' => $image_url,
+                'category_bg' => $category_bg,
+                'category_color' => $category_color,
+                'gallery' => $gallery,
+                'link' => '#'
+            ]));
+
+            return redirect()->route('admin.stories.index')->with('success', 'Cerita lapangan berhasil ditambahkan.');
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Gagal menambahkan cerita: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan cerita: ' . $e->getMessage());
         }
-
-        // Auto-assign colors depending on category
-        $category = $request->category_id;
-        $category_bg = 'bg-gray-100';
-        $category_color = 'text-gray-700';
-
-        if (stripos($category, 'spab') !== false) {
-            $category_bg = 'bg-orange-100';
-            $category_color = 'text-brand-orange';
-        } elseif (stripos($category, 'tabur') !== false || stripos($category, 'laut') !== false || stripos($category, 'nelayan') !== false) {
-            $category_bg = 'bg-emerald-100';
-            $category_color = 'text-emerald-700';
-        } elseif (stripos($category, 'smk') !== false) {
-            $category_bg = 'bg-blue-100';
-            $category_color = 'text-blue-700';
-        } elseif (stripos($category, 'hutan') !== false || stripos($category, 'tanaman') !== false || stripos($category, 'pohon') !== false) {
-            $category_bg = 'bg-green-100';
-            $category_color = 'text-green-700';
-        }
-
-        $image_url = '';
-        if ($request->hasFile('image_url')) {
-            $image_url = \App\Helpers\ImageHelper::compressAndSave($request->file('image_url'), 'stories', 'thumb');
-        }
-
-        Story::create(array_merge($validated, [
-            'image_url' => $image_url,
-            'category_bg' => $category_bg,
-            'category_color' => $category_color,
-            'gallery' => $gallery,
-            'link' => '#'
-        ]));
-
-        return redirect()->route('admin.stories.index')->with('success', 'Cerita lapangan berhasil ditambahkan.');
     }
 
     /**
@@ -156,110 +161,98 @@ class StoryController extends Controller
             'youtube_links' => 'nullable|string',
             'program_id' => 'nullable|exists:programs,id',
             'related_links' => 'nullable|string',
-        ]);
+        ], $this->validationMessages());
 
-        $gallery = $story->gallery ?? [];
-        
-        // Remove photos/videos selected for deletion
-        if ($request->has('remove_gallery')) {
-            foreach ($request->input('remove_gallery') as $path) {
-                foreach ($gallery as $key => $item) {
-                    $itemPath = is_array($item) ? ($item['path'] ?? '') : $item;
-                    $itemType = is_array($item) ? ($item['type'] ?? 'image') : 'image';
-                    if ($itemPath === $path) {
-                        unset($gallery[$key]);
-                        if ($itemType === 'image') {
-                            if (str_starts_with($path, '/storage/')) {
-                                $relativePath = str_replace('/storage/', '', $path);
-                                if (Storage::disk('public')->exists($relativePath)) {
-                                    Storage::disk('public')->delete($relativePath);
-                                }
-                            } elseif (File::exists(public_path($path))) {
-                                File::delete(public_path($path));
+        try {
+            $gallery = $story->gallery ?? [];
+            
+            // Remove photos/videos selected for deletion
+            if ($request->has('remove_gallery')) {
+                foreach ($request->input('remove_gallery') as $path) {
+                    foreach ($gallery as $key => $item) {
+                        $itemPath = is_array($item) ? ($item['path'] ?? '') : $item;
+                        $itemType = is_array($item) ? ($item['type'] ?? 'image') : 'image';
+                        if ($itemPath === $path) {
+                            unset($gallery[$key]);
+                            if ($itemType === 'image') {
+                                \App\Helpers\ImageHelper::deleteFile($path);
                             }
+                            break;
                         }
-                        break;
                     }
                 }
+                $gallery = array_values($gallery); // Re-index
             }
-            $gallery = array_values($gallery); // Re-index
-        }
 
-        // Upload and append new photos with compression
-        if ($request->hasFile('gallery')) {
-            foreach ($request->file('gallery') as $file) {
-                $path = \App\Helpers\ImageHelper::compressAndSave($file, 'stories', 'gallery');
-                $gallery[] = [
-                    'type' => 'image',
-                    'path' => $path
-                ];
-            }
-        }
-
-        // Process new YouTube video links
-        if ($request->filled('youtube_links')) {
-            $links = explode("\n", str_replace("\r", "", $request->youtube_links));
-            foreach ($links as $link) {
-                $link = trim($link);
-                if (empty($link)) continue;
-
-                $youtubeId = $this->getYoutubeId($link);
-                if ($youtubeId) {
+            // Upload and append new photos with compression
+            if ($request->hasFile('gallery')) {
+                foreach ($request->file('gallery') as $file) {
+                    $path = \App\Helpers\ImageHelper::compressAndSave($file, 'stories', 'gallery');
                     $gallery[] = [
-                        'type' => 'video',
-                        'path' => $link,
-                        'youtube_id' => $youtubeId,
-                        'embed_url' => 'https://www.youtube.com/embed/' . $youtubeId,
-                        'thumbnail' => 'https://img.youtube.com/vi/' . $youtubeId . '/hqdefault.jpg'
+                        'type' => 'image',
+                        'path' => $path
                     ];
                 }
             }
-        }
 
-        // Auto-assign colors depending on category
-        $category = $request->category_id;
-        $category_bg = 'bg-gray-100';
-        $category_color = 'text-gray-700';
+            // Process new YouTube video links
+            if ($request->filled('youtube_links')) {
+                $links = explode("\n", str_replace("\r", "", $request->youtube_links));
+                foreach ($links as $link) {
+                    $link = trim($link);
+                    if (empty($link)) continue;
 
-        if (stripos($category, 'spab') !== false) {
-            $category_bg = 'bg-orange-100';
-            $category_color = 'text-brand-orange';
-        } elseif (stripos($category, 'tabur') !== false || stripos($category, 'laut') !== false || stripos($category, 'nelayan') !== false) {
-            $category_bg = 'bg-emerald-100';
-            $category_color = 'text-emerald-700';
-        } elseif (stripos($category, 'smk') !== false) {
-            $category_bg = 'bg-blue-100';
-            $category_color = 'text-blue-700';
-        } elseif (stripos($category, 'hutan') !== false || stripos($category, 'tanaman') !== false || stripos($category, 'pohon') !== false) {
-            $category_bg = 'bg-green-100';
-            $category_color = 'text-green-700';
-        }
-
-        $image_url = $story->image_url;
-        if ($request->hasFile('image_url')) {
-            // Delete old file
-            if ($story->image_url) {
-                if (str_starts_with($story->image_url, '/storage/')) {
-                    $relativePath = str_replace('/storage/', '', $story->image_url);
-                    if (Storage::disk('public')->exists($relativePath)) {
-                        Storage::disk('public')->delete($relativePath);
+                    $youtubeId = $this->getYoutubeId($link);
+                    if ($youtubeId) {
+                        $gallery[] = [
+                            'type' => 'video',
+                            'path' => $link,
+                            'youtube_id' => $youtubeId,
+                            'embed_url' => 'https://www.youtube.com/embed/' . $youtubeId,
+                            'thumbnail' => 'https://img.youtube.com/vi/' . $youtubeId . '/hqdefault.jpg'
+                        ];
                     }
-                } elseif (File::exists(public_path($story->image_url))) {
-                    File::delete(public_path($story->image_url));
                 }
             }
 
-            $image_url = \App\Helpers\ImageHelper::compressAndSave($request->file('image_url'), 'stories', 'thumb');
+            // Auto-assign colors depending on category
+            $category = $request->category_id;
+            $category_bg = 'bg-gray-100';
+            $category_color = 'text-gray-700';
+
+            if (stripos($category, 'spab') !== false) {
+                $category_bg = 'bg-orange-100';
+                $category_color = 'text-brand-orange';
+            } elseif (stripos($category, 'tabur') !== false || stripos($category, 'laut') !== false || stripos($category, 'nelayan') !== false) {
+                $category_bg = 'bg-emerald-100';
+                $category_color = 'text-emerald-700';
+            } elseif (stripos($category, 'smk') !== false) {
+                $category_bg = 'bg-blue-100';
+                $category_color = 'text-blue-700';
+            } elseif (stripos($category, 'hutan') !== false || stripos($category, 'tanaman') !== false || stripos($category, 'pohon') !== false) {
+                $category_bg = 'bg-green-100';
+                $category_color = 'text-green-700';
+            }
+
+            $image_url = $story->image_url;
+            if ($request->hasFile('image_url')) {
+                // Delete old file
+                \App\Helpers\ImageHelper::deleteFile($story->image_url);
+                $image_url = \App\Helpers\ImageHelper::compressAndSave($request->file('image_url'), 'stories', 'thumb');
+            }
+
+            $story->update(array_merge($validated, [
+                'image_url' => $image_url,
+                'category_bg' => $category_bg,
+                'category_color' => $category_color,
+                'gallery' => $gallery
+            ]));
+
+            return redirect()->route('admin.stories.index')->with('success', 'Cerita lapangan berhasil diperbarui.');
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Gagal memperbarui cerita: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Gagal memperbarui cerita: ' . $e->getMessage());
         }
-
-        $story->update(array_merge($validated, [
-            'image_url' => $image_url,
-            'category_bg' => $category_bg,
-            'category_color' => $category_color,
-            'gallery' => $gallery
-        ]));
-
-        return redirect()->route('admin.stories.index')->with('success', 'Cerita lapangan berhasil diperbarui.');
     }
 
     /**
@@ -601,4 +594,33 @@ class StoryController extends Controller
         }
         return null;
     }
+
+    /**
+     * Custom Indonesian validation messages for stories.
+     */
+    private function validationMessages(): array
+    {
+        return [
+            'title_id.required' => 'Judul artikel (Bahasa Indonesia) wajib diisi.',
+            'title_en.required' => 'Judul artikel (Bahasa Inggris) wajib diisi.',
+            'category_id.required' => 'Kategori (Bahasa Indonesia) wajib dipilih atau diisi.',
+            'category_en.required' => 'Kategori (Bahasa Inggris) wajib dipilih atau diisi.',
+            'description_id.required' => 'Ringkasan deskripsi (Bahasa Indonesia) wajib diisi.',
+            'description_en.required' => 'Ringkasan deskripsi (Bahasa Inggris) wajib diisi.',
+            'content_id.required' => 'Isi lengkap artikel (Bahasa Indonesia) wajib diisi.',
+            'content_en.required' => 'Isi lengkap artikel (Bahasa Inggris) wajib diisi.',
+            'image_url.required' => 'Foto utama (thumbnail) artikel wajib diunggah.',
+            'image_url.image' => 'Berkas foto utama harus berupa file gambar.',
+            'image_url.mimes' => 'Format foto utama harus JPG, JPEG, PNG, WEBP, atau SVG.',
+            'image_url.max' => 'Ukuran foto utama maksimal 4 MB (4096 KB).',
+            'image_url.uploaded' => 'Gagal mengunggah foto utama. Ukuran berkas kemungkinan melebihi batas server.',
+            'gallery.array' => 'Data galeri foto harus berupa daftar file.',
+            'gallery.*.image' => 'Setiap berkas galeri yang dipilih harus berupa file gambar.',
+            'gallery.*.mimes' => 'Format setiap foto galeri harus JPG, JPEG, PNG, WEBP, atau SVG.',
+            'gallery.*.max' => 'Ukuran setiap foto galeri maksimal 4 MB (4096 KB).',
+            'gallery.*.uploaded' => 'Gagal mengunggah salah satu foto galeri karena melebihi batas kapasitas upload.',
+            'program_id.exists' => 'Program yang dipilih tidak ditemukan dalam sistem database.',
+        ];
+    }
 }
+

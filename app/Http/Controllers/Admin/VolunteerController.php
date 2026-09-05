@@ -42,27 +42,32 @@ class VolunteerController extends Controller
             'motivation' => 'required|string',
             'bio' => 'nullable|string',
             'status' => 'required|in:pending,aktif',
-            'photo_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+            'photo_path' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:4096',
+        ], $this->validationMessages());
 
-        $photo_path = null;
-        if ($request->hasFile('photo_path')) {
-            $photo_path = \App\Helpers\ImageHelper::compressAndSave($request->file('photo_path'), 'volunteers', $request->name);
+        try {
+            $photo_path = null;
+            if ($request->hasFile('photo_path')) {
+                $photo_path = \App\Helpers\ImageHelper::compressAndSave($request->file('photo_path'), 'volunteers', $request->name);
+            }
+
+            Volunteer::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'role' => $request->role,
+                'address' => $request->address,
+                'motivation' => $request->motivation,
+                'bio' => $request->bio,
+                'status' => $request->status,
+                'photo_path' => $photo_path,
+            ]);
+
+            return redirect()->route('admin.volunteers.index')->with('success', 'Relawan berhasil ditambahkan.');
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Gagal menambahkan relawan: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan data relawan: ' . $e->getMessage());
         }
-
-        Volunteer::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'role' => $request->role,
-            'address' => $request->address,
-            'motivation' => $request->motivation,
-            'bio' => $request->bio,
-            'status' => $request->status,
-            'photo_path' => $photo_path,
-        ]);
-
-        return redirect()->route('admin.volunteers.index')->with('success', 'Relawan berhasil ditambahkan.');
     }
 
     /**
@@ -90,39 +95,34 @@ class VolunteerController extends Controller
             'motivation' => 'required|string',
             'bio' => 'nullable|string',
             'status' => 'required|in:pending,aktif',
-            'photo_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+            'photo_path' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:4096',
+        ], $this->validationMessages());
 
-        $photo_path = $volunteer->photo_path;
-        if ($request->hasFile('photo_path')) {
-            // Delete old photo
-            if ($volunteer->photo_path) {
-                if (str_starts_with($volunteer->photo_path, '/storage/')) {
-                    $relativePath = str_replace('/storage/', '', $volunteer->photo_path);
-                    if (Storage::disk('public')->exists($relativePath)) {
-                        Storage::disk('public')->delete($relativePath);
-                    }
-                } elseif (File::exists(public_path($volunteer->photo_path))) {
-                    File::delete(public_path($volunteer->photo_path));
-                }
+        try {
+            $photo_path = $volunteer->photo_path;
+            if ($request->hasFile('photo_path')) {
+                // Delete old photo
+                \App\Helpers\ImageHelper::deleteFile($volunteer->photo_path);
+                $photo_path = \App\Helpers\ImageHelper::compressAndSave($request->file('photo_path'), 'volunteers', $request->name);
             }
 
-            $photo_path = \App\Helpers\ImageHelper::compressAndSave($request->file('photo_path'), 'volunteers', $request->name);
+            $volunteer->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'role' => $request->role,
+                'address' => $request->address,
+                'motivation' => $request->motivation,
+                'bio' => $request->bio,
+                'status' => $request->status,
+                'photo_path' => $photo_path,
+            ]);
+
+            return redirect()->route('admin.volunteers.index')->with('success', 'Data relawan berhasil diperbarui.');
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Gagal memperbarui data relawan: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Gagal memperbarui relawan: ' . $e->getMessage());
         }
-
-        $volunteer->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'role' => $request->role,
-            'address' => $request->address,
-            'motivation' => $request->motivation,
-            'bio' => $request->bio,
-            'status' => $request->status,
-            'photo_path' => $photo_path,
-        ]);
-
-        return redirect()->route('admin.volunteers.index')->with('success', 'Data relawan berhasil diperbarui.');
     }
 
     /**
@@ -132,19 +132,32 @@ class VolunteerController extends Controller
     {
         $volunteer = Volunteer::findOrFail($id);
         
-        if ($volunteer->photo_path) {
-            if (str_starts_with($volunteer->photo_path, '/storage/')) {
-                $relativePath = str_replace('/storage/', '', $volunteer->photo_path);
-                if (Storage::disk('public')->exists($relativePath)) {
-                    Storage::disk('public')->delete($relativePath);
-                }
-            } elseif (File::exists(public_path($volunteer->photo_path))) {
-                File::delete(public_path($volunteer->photo_path));
-            }
-        }
+        \App\Helpers\ImageHelper::deleteFile($volunteer->photo_path);
 
         $volunteer->delete();
 
         return redirect()->route('admin.volunteers.index')->with('success', 'Data pendaftaran relawan berhasil dihapus.');
+    }
+
+    /**
+     * Custom Indonesian validation messages for volunteers.
+     */
+    private function validationMessages(): array
+    {
+        return [
+            'name.required' => 'Nama relawan wajib diisi.',
+            'email.required' => 'Alamat email wajib diisi.',
+            'email.email' => 'Format email tidak valid (contoh: nama@domain.com).',
+            'phone.required' => 'Nomor WhatsApp / telepon wajib diisi.',
+            'role.required' => 'Peran / posisi relawan wajib diisi.',
+            'address.required' => 'Alamat tinggal relawan wajib diisi.',
+            'motivation.required' => 'Motivasi / ide kolaborasi relawan wajib diisi.',
+            'status.required' => 'Status relawan wajib dipilih.',
+            'status.in' => 'Status relawan harus berupa pending atau aktif.',
+            'photo_path.image' => 'Berkas foto profil relawan harus berupa gambar.',
+            'photo_path.mimes' => 'Format foto profil harus JPG, JPEG, PNG, WEBP, GIF, atau SVG.',
+            'photo_path.max' => 'Ukuran foto profil tidak boleh melebihi 4 MB (4096 KB).',
+            'photo_path.uploaded' => 'Gagal mengunggah foto profil. Ukuran file kemungkinan melebihi batas server.',
+        ];
     }
 }

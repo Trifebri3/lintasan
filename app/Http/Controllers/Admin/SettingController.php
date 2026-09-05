@@ -53,37 +53,46 @@ class SettingController extends Controller
 
         if ($setting->type === 'image') {
             $request->validate([
-                'value_id' => 'nullable|image|max:3072',
-                'value_en' => 'nullable|image|max:3072',
+                'value_id' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:4096',
+                'value_en' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:4096',
+            ], [
+                'value_id.image' => 'File foto versi Bahasa Indonesia harus berupa gambar yang valid.',
+                'value_id.mimes' => 'Format foto versi Bahasa Indonesia harus JPG, JPEG, PNG, WEBP, atau SVG.',
+                'value_id.max' => 'Ukuran foto versi Bahasa Indonesia maksimal 4 MB (4096 KB).',
+                'value_id.uploaded' => 'Gagal mengunggah foto versi Bahasa Indonesia. Ukuran berkas kemungkinan melebihi batas server.',
+                'value_en.image' => 'File foto versi Bahasa Inggris harus berupa gambar yang valid.',
+                'value_en.mimes' => 'Format foto versi Bahasa Inggris harus JPG, JPEG, PNG, WEBP, atau SVG.',
+                'value_en.max' => 'Ukuran foto versi Bahasa Inggris maksimal 4 MB (4096 KB).',
+                'value_en.uploaded' => 'Gagal mengunggah foto versi Bahasa Inggris. Ukuran berkas kemungkinan melebihi batas server.',
             ]);
 
-            $data = [];
-            
-            if ($request->hasFile('value_id')) {
-                // Delete old file if stored locally
-                if (str_starts_with($setting->value_id, '/storage/settings/')) {
-                    $oldPath = str_replace('/storage/', '', $setting->value_id);
-                    Storage::disk('public')->delete($oldPath);
+            try {
+                $data = [];
+                
+                if ($request->hasFile('value_id')) {
+                    \App\Helpers\ImageHelper::deleteFile($setting->value_id);
+                    $data['value_id'] = \App\Helpers\ImageHelper::compressAndSave($request->file('value_id'), 'settings', 'bg_impact');
                 }
-                $data['value_id'] = \App\Helpers\ImageHelper::compressAndSave($request->file('value_id'), 'settings', 'bg_impact');
-            }
 
-            if ($request->hasFile('value_en')) {
-                // Delete old file if stored locally
-                if (str_starts_with($setting->value_en, '/storage/settings/')) {
-                    $oldPath = str_replace('/storage/', '', $setting->value_en);
-                    Storage::disk('public')->delete($oldPath);
+                if ($request->hasFile('value_en')) {
+                    \App\Helpers\ImageHelper::deleteFile($setting->value_en);
+                    $data['value_en'] = \App\Helpers\ImageHelper::compressAndSave($request->file('value_en'), 'settings', 'bg_impact_en');
                 }
-                $data['value_en'] = \App\Helpers\ImageHelper::compressAndSave($request->file('value_en'), 'settings', 'bg_impact_en');
-            }
 
-            if (!empty($data)) {
-                $setting->update($data);
+                if (!empty($data)) {
+                    $setting->update($data);
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error('Gagal memperbarui pengaturan gambar: ' . $e->getMessage());
+                return redirect()->back()->withInput()->with('error', 'Gagal menyimpan gambar pengaturan: ' . $e->getMessage());
             }
         } else {
             $request->validate([
                 'value_id' => 'required|string',
                 'value_en' => 'required|string',
+            ], [
+                'value_id.required' => 'Nilai pengaturan (Bahasa Indonesia) wajib diisi.',
+                'value_en.required' => 'Nilai pengaturan (Bahasa Inggris) wajib diisi.',
             ]);
 
             $setting->update([

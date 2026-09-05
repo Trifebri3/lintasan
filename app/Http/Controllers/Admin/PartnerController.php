@@ -36,33 +36,40 @@ class PartnerController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'logo_icon' => 'nullable|string|max:100',
-            'logo_path' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'logo_path' => 'required|image|mimes:jpeg,png,jpg,gif,webp,svg|max:4096',
             'url' => 'nullable|url|max:255',
             'sort_order' => 'required|integer',
         ], [
-            'name.required' => 'Nama instansi/lembaga wajib diisi.',
-            'logo_path.required' => 'File logo wajib diunggah.',
-            'logo_path.image' => 'File logo harus berupa gambar.',
-            'logo_path.mimes' => 'Format file logo harus berupa jpeg, png, jpg, gif, atau svg.',
-            'logo_path.max' => 'Ukuran file logo tidak boleh melebihi 2MB (2048 KB).',
+            'name.required' => 'Nama instansi / lembaga wajib diisi.',
+            'logo_path.required' => 'File logo mitra wajib diunggah.',
+            'logo_path.image' => 'File logo harus berupa berkas gambar.',
+            'logo_path.mimes' => 'Format file logo harus berupa JPG, JPEG, PNG, WEBP, GIF, atau SVG.',
+            'logo_path.max' => 'Ukuran file logo tidak boleh melebihi 4 MB (4096 KB).',
+            'logo_path.uploaded' => 'Gagal mengunggah file logo. Ukuran berkas kemungkinan melebihi kapasitas server.',
+            'url.url' => 'Tautan URL situs mitra tidak valid (contoh: https://www.domain.com).',
             'sort_order.required' => 'Urutan tampil wajib diisi.',
             'sort_order.integer' => 'Urutan tampil harus berupa angka.',
         ]);
 
-        $logo_path = null;
-        if ($request->hasFile('logo_path')) {
-            $logo_path = \App\Helpers\ImageHelper::compressAndSave($request->file('logo_path'), 'partners', $request->name);
+        try {
+            $logo_path = null;
+            if ($request->hasFile('logo_path')) {
+                $logo_path = \App\Helpers\ImageHelper::compressAndSave($request->file('logo_path'), 'partners', $request->name);
+            }
+
+            Partner::create([
+                'name' => $request->name,
+                'logo_icon' => $request->logo_icon ?? 'fa-handshake',
+                'logo_path' => $logo_path,
+                'url' => $request->url,
+                'sort_order' => $request->sort_order,
+            ]);
+
+            return redirect()->route('admin.partners.index')->with('success', 'Mitra berhasil ditambahkan.');
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Gagal menambahkan mitra: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan mitra: ' . $e->getMessage());
         }
-
-        Partner::create([
-            'name' => $request->name,
-            'logo_icon' => $request->logo_icon ?? 'fa-handshake',
-            'logo_path' => $logo_path,
-            'url' => $request->url,
-            'sort_order' => $request->sort_order,
-        ]);
-
-        return redirect()->route('admin.partners.index')->with('success', 'Mitra berhasil ditambahkan.');
     }
 
     /**
@@ -84,44 +91,41 @@ class PartnerController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'logo_icon' => 'nullable|string|max:100',
-            'logo_path' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'logo_path' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:4096',
             'url' => 'nullable|url|max:255',
             'sort_order' => 'required|integer',
         ], [
-            'name.required' => 'Nama instansi/lembaga wajib diisi.',
-            'logo_path.image' => 'File logo harus berupa gambar.',
-            'logo_path.mimes' => 'Format file logo harus berupa jpeg, png, jpg, gif, atau svg.',
-            'logo_path.max' => 'Ukuran file logo tidak boleh melebihi 2MB (2048 KB).',
+            'name.required' => 'Nama instansi / lembaga wajib diisi.',
+            'logo_path.image' => 'File logo harus berupa berkas gambar.',
+            'logo_path.mimes' => 'Format file logo harus berupa JPG, JPEG, PNG, WEBP, GIF, atau SVG.',
+            'logo_path.max' => 'Ukuran file logo tidak boleh melebihi 4 MB (4096 KB).',
+            'logo_path.uploaded' => 'Gagal mengunggah file logo. Ukuran berkas kemungkinan melebihi kapasitas server.',
+            'url.url' => 'Tautan URL situs mitra tidak valid (contoh: https://www.domain.com).',
             'sort_order.required' => 'Urutan tampil wajib diisi.',
             'sort_order.integer' => 'Urutan tampil harus berupa angka.',
         ]);
 
-        $logo_path = $partner->logo_path;
-        if ($request->hasFile('logo_path')) {
-            // Delete old file
-            if ($partner->logo_path) {
-                if (str_starts_with($partner->logo_path, '/storage/')) {
-                    $relativePath = str_replace('/storage/', '', $partner->logo_path);
-                    if (Storage::disk('public')->exists($relativePath)) {
-                        Storage::disk('public')->delete($relativePath);
-                    }
-                } elseif (File::exists(public_path($partner->logo_path))) {
-                    File::delete(public_path($partner->logo_path));
-                }
+        try {
+            $logo_path = $partner->logo_path;
+            if ($request->hasFile('logo_path')) {
+                // Delete old file
+                \App\Helpers\ImageHelper::deleteFile($partner->logo_path);
+                $logo_path = \App\Helpers\ImageHelper::compressAndSave($request->file('logo_path'), 'partners', $request->name);
             }
 
-            $logo_path = \App\Helpers\ImageHelper::compressAndSave($request->file('logo_path'), 'partners', $request->name);
+            $partner->update([
+                'name' => $request->name,
+                'logo_icon' => $request->logo_icon ?? 'fa-handshake',
+                'logo_path' => $logo_path,
+                'url' => $request->url,
+                'sort_order' => $request->sort_order,
+            ]);
+
+            return redirect()->route('admin.partners.index')->with('success', 'Mitra berhasil diperbarui.');
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Gagal memperbarui mitra: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Gagal memperbarui mitra: ' . $e->getMessage());
         }
-
-        $partner->update([
-            'name' => $request->name,
-            'logo_icon' => $request->logo_icon ?? 'fa-handshake',
-            'logo_path' => $logo_path,
-            'url' => $request->url,
-            'sort_order' => $request->sort_order,
-        ]);
-
-        return redirect()->route('admin.partners.index')->with('success', 'Mitra berhasil diperbarui.');
     }
 
     /**
@@ -131,16 +135,7 @@ class PartnerController extends Controller
     {
         $partner = Partner::findOrFail($id);
         
-        if ($partner->logo_path) {
-            if (str_starts_with($partner->logo_path, '/storage/')) {
-                $relativePath = str_replace('/storage/', '', $partner->logo_path);
-                if (Storage::disk('public')->exists($relativePath)) {
-                    Storage::disk('public')->delete($relativePath);
-                }
-            } elseif (File::exists(public_path($partner->logo_path))) {
-                File::delete(public_path($partner->logo_path));
-            }
-        }
+        \App\Helpers\ImageHelper::deleteFile($partner->logo_path);
 
         $partner->delete();
         

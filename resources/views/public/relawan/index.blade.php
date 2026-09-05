@@ -32,6 +32,29 @@
                 </div>
             @endif
 
+            @if(session('error'))
+                <div class="bg-red-50 border border-red-300 text-red-800 rounded-lg p-4 mb-6 flex items-start gap-3 text-sm font-medium shadow-sm">
+                    <i class="fas fa-circle-xmark text-lg text-red-600 mt-0.5 shrink-0"></i>
+                    <div>
+                        <div class="font-bold text-red-900 mb-1">Gagal Mengirim Pendaftaran</div>
+                        <div class="text-xs text-red-700 whitespace-pre-line leading-relaxed">{{ session('error') }}</div>
+                    </div>
+                </div>
+            @endif
+
+            @if($errors->any())
+                <div class="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6 text-xs font-semibold shadow-sm">
+                    <div class="font-extrabold text-sm mb-2 flex items-center gap-1.5 text-red-800">
+                        <i class="fas fa-triangle-exclamation text-base text-red-600"></i> Mohon Periksa Isian Formulir Anda:
+                    </div>
+                    <ul class="list-disc pl-5 space-y-1 font-medium">
+                        @foreach($errors->all() as $error)
+                            <li class="leading-relaxed">{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form action="{{ route('public.volunteer.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 
@@ -137,3 +160,8 @@
     </div>
 </div>
 @endsection
+
+@section('scripts')
+<script src="{{ asset('js/image-upload-helper.js') }}"></script>
+@endsection
+
