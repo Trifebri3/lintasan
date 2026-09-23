@@ -93,7 +93,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('public.partner.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                <form action="{{ \Illuminate\Support\Facades\Route::has('public.partner.store') ? route('public.partner.store') : url('/mitra/register') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                     @csrf
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
