@@ -126,15 +126,99 @@
                     @enderror
                 </div>
 
-                <!-- Sort Order -->
+                <!-- Bento Grid Layout Size Selector -->
                 <div>
-                    <label for="sort_order" class="block font-bold text-gray-700 mb-1">Urutan Tampil (Sort Order)</label>
-                    <input type="number" name="sort_order" id="sort_order" value="{{ old('sort_order', $item->sort_order) }}" required class="w-32 bg-gray-50 border border-gray-200 focus:border-brand-green focus:bg-white rounded-lg p-2.5 text-xs outline-none transition">
-                    <span class="block text-[10px] text-gray-400 mt-1">Semakin kecil angkanya, semakin awal ditampilkan di grid.</span>
-                    @error('sort_order')
+                    <label class="block font-bold text-gray-800 mb-1 flex items-center justify-between">
+                        <span>Pilihan Ukuran Layout (Bento Grid)</span>
+                        <span class="text-[10px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                            <i class="fas fa-shapes mr-1"></i> Tampilan Unik Dinamis
+                        </span>
+                    </label>
+                    <p class="text-[10px] text-gray-500 mb-3">Tentukan proporsi kartu dokumentasi ini agar halaman galeri publik tampil variatif dan tidak monoton.</p>
+                    
+                    @php
+                        $currentSize = old('layout_size', $item->layout_size ?? 'normal');
+                    @endphp
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                        <!-- 1. Normal (1x1) -->
+                        <label class="relative flex flex-col p-3.5 bg-gray-50 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-500 hover:bg-emerald-50/20 transition group has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50/40 has-[:checked]:ring-1 has-[:checked]:ring-emerald-600">
+                            <input type="radio" name="layout_size" value="normal" {{ $currentSize === 'normal' ? 'checked' : '' }} class="sr-only">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-extrabold text-xs text-gray-900 group-hover:text-emerald-700">Normal (1x1)</span>
+                                <div class="w-6 h-6 rounded bg-gray-200 group-has-[:checked]:bg-emerald-600 group-has-[:checked]:text-white flex items-center justify-center text-[10px]">
+                                    <i class="fas fa-square"></i>
+                                </div>
+                            </div>
+                            <div class="w-full h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center text-gray-400 group-has-[:checked]:border-emerald-300 mb-2">
+                                <div class="w-8 h-8 rounded bg-gray-100 group-has-[:checked]:bg-emerald-100 flex items-center justify-center text-[10px] text-gray-500 font-mono">1x1</div>
+                            </div>
+                            <span class="text-[10px] text-gray-500 leading-tight">Ukuran kotak standar 1 kolom x 1 baris.</span>
+                        </label>
+
+                        <!-- 2. Featured (2x2) -->
+                        <label class="relative flex flex-col p-3.5 bg-gray-50 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-purple-500 hover:bg-purple-50/20 transition group has-[:checked]:border-purple-600 has-[:checked]:bg-purple-50/40 has-[:checked]:ring-1 has-[:checked]:ring-purple-600">
+                            <input type="radio" name="layout_size" value="featured" {{ $currentSize === 'featured' ? 'checked' : '' }} class="sr-only">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-extrabold text-xs text-gray-900 group-hover:text-purple-700">Besar (2x2)</span>
+                                <div class="w-6 h-6 rounded bg-gray-200 group-has-[:checked]:bg-purple-600 group-has-[:checked]:text-white flex items-center justify-center text-[10px]">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                            <div class="w-full h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center text-gray-400 group-has-[:checked]:border-purple-300 mb-2">
+                                <div class="w-12 h-10 rounded bg-purple-100 text-purple-700 flex items-center justify-center text-[10px] font-mono font-bold">2x2</div>
+                            </div>
+                            <span class="text-[10px] text-gray-500 leading-tight">Sorotan utama besar (2 kolom x 2 baris).</span>
+                        </label>
+
+                        <!-- 3. Wide (2x1) -->
+                        <label class="relative flex flex-col p-3.5 bg-gray-50 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-blue-500 hover:bg-blue-50/20 transition group has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/40 has-[:checked]:ring-1 has-[:checked]:ring-blue-600">
+                            <input type="radio" name="layout_size" value="wide" {{ $currentSize === 'wide' ? 'checked' : '' }} class="sr-only">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-extrabold text-xs text-gray-900 group-hover:text-blue-700">Lebar (2x1)</span>
+                                <div class="w-6 h-6 rounded bg-gray-200 group-has-[:checked]:bg-blue-600 group-has-[:checked]:text-white flex items-center justify-center text-[10px]">
+                                    <i class="fas fa-arrows-left-right"></i>
+                                </div>
+                            </div>
+                            <div class="w-full h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center text-gray-400 group-has-[:checked]:border-blue-300 mb-2">
+                                <div class="w-16 h-6 rounded bg-blue-100 text-blue-700 flex items-center justify-center text-[10px] font-mono font-bold">2x1</div>
+                            </div>
+                            <span class="text-[10px] text-gray-500 leading-tight">Panjang mendatar (2 kolom x 1 baris).</span>
+                        </label>
+
+                        <!-- 4. Tall (1x2) -->
+                        <label class="relative flex flex-col p-3.5 bg-gray-50 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-amber-500 hover:bg-amber-50/20 transition group has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50/40 has-[:checked]:ring-1 has-[:checked]:ring-amber-600">
+                            <input type="radio" name="layout_size" value="tall" {{ $currentSize === 'tall' ? 'checked' : '' }} class="sr-only">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-extrabold text-xs text-gray-900 group-hover:text-amber-700">Tinggi (1x2)</span>
+                                <div class="w-6 h-6 rounded bg-gray-200 group-has-[:checked]:bg-amber-600 group-has-[:checked]:text-white flex items-center justify-center text-[10px]">
+                                    <i class="fas fa-arrows-up-down"></i>
+                                </div>
+                            </div>
+                            <div class="w-full h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center text-gray-400 group-has-[:checked]:border-amber-300 mb-2">
+                                <div class="w-6 h-10 rounded bg-amber-100 text-amber-700 flex items-center justify-center text-[10px] font-mono font-bold">1x2</div>
+                            </div>
+                            <span class="text-[10px] text-gray-500 leading-tight">Tegak potret vertikal (1 kolom x 2 baris).</span>
+                        </label>
+                    </div>
+                    @error('layout_size')
                         <p class="text-red-500 text-[10px] mt-1 font-semibold">{{ $message }}</p>
                     @enderror
                 </div>
+
+                <!-- Sort Order (Urutan Tampilan Keberapa) -->
+                <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <label for="sort_order" class="block font-bold text-gray-900 mb-0.5">Urutan Tampilan (Tampilan Keberapa) <span class="text-red-500">*</span></label>
+                        <p class="text-[11px] text-gray-500">Tentukan nomor urutan pemunculan foto/video ini di halaman galeri. Angka <strong>1</strong> berarti tampil paling awal/pertama.</p>
+                    </div>
+                    <div class="shrink-0 flex items-center gap-2">
+                        <span class="text-xs font-black text-gray-400">#</span>
+                        <input type="number" name="sort_order" id="sort_order" value="{{ old('sort_order', $item->sort_order) }}" min="1" required class="w-24 bg-white border border-gray-300 focus:border-brand-green rounded-lg p-2.5 text-xs font-bold text-gray-900 text-center outline-none">
+                    </div>
+                </div>
+                @error('sort_order')
+                    <p class="text-red-500 text-[10px] -mt-3 font-semibold">{{ $message }}</p>
+                @enderror
 
                 <!-- Submit / Back buttons -->
                 <div class="flex items-center gap-3 pt-4 border-t border-gray-150">

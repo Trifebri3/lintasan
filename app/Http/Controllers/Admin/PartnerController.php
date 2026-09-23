@@ -17,7 +17,8 @@ class PartnerController extends Controller
     public function index()
     {
         $partners = Partner::orderBy('sort_order')->get();
-        return view('admin.mitra.index', compact('partners'));
+        $applications = \App\Models\PartnerApplication::latest()->get();
+        return view('admin.mitra.index', compact('partners', 'applications'));
     }
 
     /**
@@ -140,5 +141,39 @@ class PartnerController extends Controller
         $partner->delete();
         
         return redirect()->route('admin.partners.index')->with('success', 'Mitra berhasil dihapus.');
+    }
+
+    /**
+     * Approve incoming partner application.
+     */
+    public function approveApplication($id)
+    {
+        $app = \App\Models\PartnerApplication::findOrFail($id);
+
+        Partner::create([
+            'name' => $app->institution_name,
+            'logo_icon' => 'fa-handshake',
+            'logo_path' => $app->logo_path ?: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
+            'url' => null,
+            'sort_order' => (Partner::max('sort_order') ?? 0) + 1,
+        ]);
+
+        $app->update(['status' => 'disetujui']);
+
+        return redirect()->route('admin.partners.index')->with('success', "Pengajuan kemitraan '{$app->institution_name}' berhasil disetujui dan ditambahkan ke daftar mitra resmi.");
+    }
+
+    /**
+     * Remove partner application.
+     */
+    public function destroyApplication($id)
+    {
+        $app = \App\Models\PartnerApplication::findOrFail($id);
+        if ($app->logo_path) {
+            \App\Helpers\ImageHelper::deleteFile($app->logo_path);
+        }
+        $app->delete();
+
+        return redirect()->route('admin.partners.index')->with('success', 'Data pengajuan kemitraan berhasil dihapus.');
     }
 }

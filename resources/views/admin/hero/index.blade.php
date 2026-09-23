@@ -7,9 +7,14 @@
             <h1 class="text-2xl font-extrabold text-gray-900 leading-tight">Pengaturan Slide Hero Utama</h1>
             <p class="text-xs text-gray-500 mt-1">Kelola gambar latar slideshow hero dan teks slogan multi-bahasa</p>
         </div>
-        <a href="{{ route('admin.hero-images.create') }}" class="bg-brand-green hover:bg-brand-darkgreen text-white font-bold text-xs px-4 py-2.5 rounded-lg shadow transition flex items-center gap-1.5">
-            <i class="fas fa-plus"></i> Tambah Slide Baru
-        </a>
+        <div class="flex items-center gap-2">
+            <button type="button" onclick="openLivePreviewModal('/')" class="bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 text-xs font-bold px-3.5 py-2.5 rounded-lg transition flex items-center gap-1.5 shadow-sm">
+                <i class="fas fa-desktop"></i> Live Preview Beranda
+            </button>
+            <a href="{{ route('admin.hero-images.create') }}" class="bg-brand-green hover:bg-brand-darkgreen text-white font-bold text-xs px-4 py-2.5 rounded-lg shadow transition flex items-center gap-1.5">
+                <i class="fas fa-plus"></i> Tambah Slide Baru
+            </a>
+        </div>
     </div>
 
     @if(session('success'))

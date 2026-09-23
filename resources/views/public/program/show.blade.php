@@ -1,7 +1,7 @@
 @extends('public.layout.app')
 
-@section('title', (str_contains($program->title, 'SPAB') ? db_trans('program_spab_title', 'SPAB (Sekolah Aman Bencana)', 'Disaster Preparedness School (SPAB)') : (str_contains($program->title, 'Tabur Laut') ? db_trans('program_tabur_title', 'Tabur Laut', 'Tabur Laut Program') : (str_contains($program->title, 'SMK') ? db_trans('program_smk_title', 'SMK Bisa! SMK Jago!', 'SMK Success Program') : (str_contains($program->title, 'Hutan') ? db_trans('program_forest_title', 'Hutan Anak Negeri', 'National Forest Program') : (str_contains($program->title, 'Kesehatan') ? db_trans('program_health_title', 'Kesehatan Masyarakat', 'Public Health Initiative') : $program->title))))) . ' - Yayasan LINTASAN')
-@section('meta_description', Str::limit(strip_tags(str_contains($program->title, 'SPAB') ? db_trans('program_spab_desc', 'Membangun budaya sadar bencana di sekolah dan masyarakat.', 'Building a culture of disaster awareness in schools and communities.') : (str_contains($program->title, 'Tabur Laut') ? db_trans('program_tabur_desc', 'Penguatan ekonomi nelayan melalui pendampingan usaha dan inovasi.', 'Strengthening fishermen economics through business guidance and innovation.') : (str_contains($program->title, 'SMK') ? db_trans('program_smk_desc', 'Meningkatkan kompetensi siswa SMK agar siap kerja dan berdaya saing.', 'Enhancing vocational student competency to be ready-to-work and competitive.') : (str_contains($program->title, 'Hutan') ? db_trans('program_forest_desc', 'Gerakan menanam dan merawat hutan untuk masa depan bumi yang lebih baik.', 'Reforesting and caring for forests for a better future of our planet.') : (str_contains($program->title, 'Kesehatan') ? db_trans('program_health_desc', 'Pemeriksaan kesehatan dan edukasi hidup sehat bagi komunitas.', 'Providing health checkups and healthy lifestyle education for communities.') : $program->description))))), 150))
+@section('title', $program->title . ' - Yayasan LINTASAN')
+@section('meta_description', Str::limit(strip_tags($program->description), 150))
 @section('og_image', asset($program->image_url))
 
 @section('content')
@@ -11,22 +11,6 @@
         @php
             $progTitle = $program->title;
             $progDesc = $program->description;
-            if (str_contains($program->title, 'SPAB')) {
-                $progTitle = db_trans('program_spab_title', 'SPAB (Sekolah Aman Bencana)', 'Disaster Preparedness School (SPAB)');
-                $progDesc = db_trans('program_spab_desc', 'Membangun budaya sadar bencana di sekolah dan masyarakat.', 'Building a culture of disaster awareness in schools and communities.');
-            } elseif (str_contains($program->title, 'Tabur Laut')) {
-                $progTitle = db_trans('program_tabur_title', 'Tabur Laut', 'Tabur Laut Program');
-                $progDesc = db_trans('program_tabur_desc', 'Penguatan ekonomi nelayan melalui pendampingan usaha dan inovasi.', 'Strengthening fishermen economics through business guidance and innovation.');
-            } elseif (str_contains($program->title, 'SMK Bisa')) {
-                $progTitle = db_trans('program_smk_title', 'SMK Bisa! SMK Jago!', 'SMK Success Program');
-                $progDesc = db_trans('program_smk_desc', 'Meningkatkan kompetensi siswa SMK agar siap kerja dan berdaya saing.', 'Enhancing vocational student competency to be ready-to-work and competitive.');
-            } elseif (str_contains($program->title, 'Hutan')) {
-                $progTitle = db_trans('program_forest_title', 'Hutan Anak Negeri', 'National Forest Program');
-                $progDesc = db_trans('program_forest_desc', 'Gerakan menanam dan merawat hutan untuk masa depan bumi yang lebih baik.', 'Reforesting and caring for forests for a better future of our planet.');
-            } elseif (str_contains($program->title, 'Kesehatan')) {
-                $progTitle = db_trans('program_health_title', 'Kesehatan Masyarakat', 'Public Health Initiative');
-                $progDesc = db_trans('program_health_desc', 'Pemeriksaan kesehatan dan edukasi hidup sehat bagi komunitas.', 'Providing health checkups and healthy lifestyle education for communities.');
-            }
         @endphp
 
         <!-- Breadcrumb -->
@@ -64,35 +48,20 @@
                     <h3 class="font-bold text-gray-900 text-sm mb-4 border-b border-gray-100 pb-2">
                         {{ db_trans('program_other_programs', 'Program Lainnya', 'Other Programs') }}
                     </h3>
-                    <div class="space-y-4">
+                    <div class="space-y-3">
                         @forelse($otherPrograms as $other)
                             @php
                                 $otherTitle = $other->title;
-                                $otherDesc = $other->description;
-                                if (str_contains($other->title, 'SPAB')) {
-                                    $otherTitle = db_trans('program_spab_title', 'SPAB (Sekolah Aman Bencana)', 'Disaster Preparedness School (SPAB)');
-                                    $otherDesc = db_trans('program_spab_desc', 'Membangun budaya sadar bencana di sekolah dan masyarakat.', 'Building a culture of disaster awareness in schools and communities.');
-                                } elseif (str_contains($other->title, 'Tabur Laut')) {
-                                    $otherTitle = db_trans('program_tabur_title', 'Tabur Laut', 'Tabur Laut Program');
-                                    $otherDesc = db_trans('program_tabur_desc', 'Penguatan ekonomi nelayan melalui pendampingan usaha dan inovasi.', 'Strengthening fishermen economics through business guidance and innovation.');
-                                } elseif (str_contains($other->title, 'SMK Bisa')) {
-                                    $otherTitle = db_trans('program_smk_title', 'SMK Bisa! SMK Jago!', 'SMK Success Program');
-                                    $otherDesc = db_trans('program_smk_desc', 'Meningkatkan kompetensi siswa SMK agar siap kerja dan berdaya saing.', 'Enhancing vocational student competency to be ready-to-work and competitive.');
-                                } elseif (str_contains($other->title, 'Hutan')) {
-                                    $otherTitle = db_trans('program_forest_title', 'Hutan Anak Negeri', 'National Forest Program');
-                                    $otherDesc = db_trans('program_forest_desc', 'Gerakan menanam dan merawat hutan untuk masa depan bumi yang lebih baik.', 'Reforesting and caring for forests for a better future of our planet.');
-                                } elseif (str_contains($other->title, 'Kesehatan')) {
-                                    $otherTitle = db_trans('program_health_title', 'Kesehatan Masyarakat', 'Public Health Initiative');
-                                    $otherDesc = db_trans('program_health_desc', 'Pemeriksaan kesehatan dan edukasi hidup sehat bagi komunitas.', 'Providing health checkups and healthy lifestyle education for communities.');
-                                }
+                                $rawDesc = !empty($other->short_description) ? $other->short_description : $other->description;
+                                $otherDesc = trim(preg_replace('/\s+/', ' ', strip_tags($rawDesc)));
                             @endphp
-                            <a href="{{ route('public.programs.show', $other->code) }}" class="flex gap-3 group">
-                                <div class="w-12 h-12 rounded {{ $other->color_class }} text-white flex items-center justify-center shrink-0 shadow-sm text-sm">
+                            <a href="{{ route('public.programs.show', $other->code) }}" class="flex items-center gap-3.5 p-2 rounded-xl hover:bg-gray-50 transition group border border-transparent hover:border-gray-100">
+                                <div class="w-11 h-11 rounded-xl {{ $other->color_class }} text-white flex items-center justify-center shrink-0 shadow-sm text-sm group-hover:scale-105 transition-transform">
                                     <i class="fas {{ $other->icon }}"></i>
                                 </div>
-                                <div>
-                                    <h4 class="font-bold text-xs text-gray-900 group-hover:text-brand-green transition leading-tight">{{ $otherTitle }}</h4>
-                                    <p class="text-[10px] text-gray-500 line-clamp-2 mt-0.5">{{ $otherDesc }}</p>
+                                <div class="min-w-0 flex-1">
+                                    <h4 class="font-bold text-xs text-gray-900 group-hover:text-brand-green transition leading-tight truncate">{{ $otherTitle }}</h4>
+                                    <p class="text-[11px] text-gray-500 line-clamp-2 mt-0.5 leading-snug">{{ $otherDesc }}</p>
                                 </div>
                             </a>
                         @empty

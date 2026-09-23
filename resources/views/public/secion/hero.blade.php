@@ -53,7 +53,7 @@
                             {{ session('locale') == 'en' ? 'Explore Programs' : 'Jelajahi Program' }} <i class="fas fa-arrow-right text-xs"></i>
                         </a>
                         <a href="{{ $slide->button_link ?: route('public.stories.index') }}" class="border border-white/80 text-white px-6 py-3.5 rounded-md font-semibold flex items-center gap-2 hover:bg-white/10 transition">
-                            <i class="fas fa-play-circle text-lg"></i> {{ session('locale') == 'en' ? 'View Impact' : 'Lihat Dampak' }}
+                            <i class="fas fa-play-circle text-lg"></i> {{ session('locale') == 'en' ? 'Stories from the Field' : 'Cerita Dari Lapangan' }}
                         </a>
                     </div>
                 </div>
@@ -83,7 +83,7 @@
                         {{ session('locale') == 'en' ? 'Explore Programs' : 'Jelajahi Program' }}
                     </a>
                     <a href="{{ $slide->button_link ?: route('public.stories.index') }}" class="border border-slate-350 text-slate-700 text-[10px] min-[380px]:text-xs font-bold py-2 min-[380px]:py-2.5 px-3 min-[380px]:px-4 rounded-lg hover:bg-slate-50 transition inline-block">
-                        <i class="fas fa-play-circle text-[9px] min-[380px]:text-[10px] text-slate-500 mr-0.5 min-[380px]:mr-1"></i> {{ session('locale') == 'en' ? 'View Impact' : 'Lihat Dampak' }}
+                        <i class="fas fa-play-circle text-[9px] min-[380px]:text-[10px] text-slate-500 mr-0.5 min-[380px]:mr-1"></i> {{ session('locale') == 'en' ? 'Stories from the Field' : 'Cerita Dari Lapangan' }}
                     </a>
                 </div>
             </div>

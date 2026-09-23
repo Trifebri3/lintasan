@@ -12,7 +12,7 @@ class ProgramController extends Controller
      */
     public function index()
     {
-        $programs = Program::all();
+        $programs = Program::orderBy('sort_order')->get();
         return view('public.program.index', compact('programs'));
     }
 
@@ -22,7 +22,7 @@ class ProgramController extends Controller
     public function show($code)
     {
         $program = Program::where('code', $code)->firstOrFail();
-        $otherPrograms = Program::where('id', '!=', $program->id)->limit(4)->get();
+        $otherPrograms = Program::where('id', '!=', $program->id)->orderBy('sort_order')->limit(4)->get();
         $relatedStories = \App\Models\Story::where('program_id', $program->id)->latest()->get();
         return view('public.program.show', compact('program', 'otherPrograms', 'relatedStories'));
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Setting;
+use App\Models\OrganizationValue;
 use Illuminate\Support\Facades\Storage;
 
 class SettingController extends Controller
@@ -12,7 +13,7 @@ class SettingController extends Controller
     /**
      * Display a listing of page settings.
      */
-    public function index()
+    public function index(Request $request)
     {
         // Auto-initialize background photo settings if missing
         Setting::firstOrCreate(
@@ -40,8 +41,74 @@ class SettingController extends Controller
             ]
         );
 
-        $settings = Setting::all();
-        return view('admin.settings.index', compact('settings'));
+        $allSettings = Setting::all()->keyBy('key');
+        $organizationValues = OrganizationValue::orderBy('order')->get();
+
+        $categories = [
+            'profil' => [
+                'id' => 'profil',
+                'title' => 'Profil & Visi Misi',
+                'badge' => 'Tentang Kami',
+                'subtitle' => 'Pengaturan teks kutipan profil, visi, misi, dan penutup pada halaman Tentang Kami',
+                'icon' => 'fa-building-columns',
+                'keys' => ['about_profile', 'about_visi', 'about_misi', 'about_conclusion']
+            ],
+            'nilai' => [
+                'id' => 'nilai',
+                'title' => 'Nilai Lintasan',
+                'badge' => $organizationValues->count() . ' Nilai',
+                'subtitle' => 'Kelola nilai/pilar utama Yayasan LINTASAN dari company profile. Bisa ditambah (+) dan dikurangi (-).',
+                'icon' => 'fa-award',
+                'keys' => []
+            ],
+            'banner' => [
+                'id' => 'banner',
+                'title' => 'Foto Latar & Banner',
+                'badge' => 'Visual Beranda & Footer',
+                'subtitle' => 'Kelola foto latar belakang seksi statistik dampak dan banner ajakan aksi (CTA)',
+                'icon' => 'fa-images',
+                'keys' => ['title_impact', 'bg_photo_impact', 'bg_photo_cta']
+            ],
+            'label' => [
+                'id' => 'label',
+                'title' => 'Label & Teks Tambahan',
+                'badge' => 'UI & Frasa Publik',
+                'subtitle' => 'Daftar teks tombol, judul navigasi, dan frasa umum lainnya di situs web',
+                'icon' => 'fa-language',
+                'keys' => []
+            ]
+        ];
+
+        // Gather keys belonging to top categories + legacy pillar keys
+        $assignedKeys = array_merge(
+            $categories['profil']['keys'],
+            $categories['nilai']['keys'],
+            $categories['banner']['keys'],
+            [
+                'about_pillar_kolaborasi', 
+                'about_pillar_edukasi', 
+                'about_pillar_inovasi', 
+                'about_pillar_transparansi', 
+                'about_pillar_5_title', 
+                'about_pillar_5_desc'
+            ]
+        );
+
+        // Put any remaining settings in the 'label' category
+        $otherSettings = Setting::whereNotIn('key', $assignedKeys)->orderBy('key')->get();
+
+        $activeTab = $request->query('tab', 'profil');
+        if (!array_key_exists($activeTab, $categories)) {
+            $activeTab = 'profil';
+        }
+
+        return view('admin.settings.index', compact(
+            'allSettings', 
+            'categories', 
+            'otherSettings', 
+            'activeTab',
+            'organizationValues'
+        ));
     }
 
     /**
@@ -103,6 +170,12 @@ class SettingController extends Controller
 
         \Illuminate\Support\Facades\Cache::forget('site_social_settings');
 
-        return redirect()->route('admin.settings.index')->with('success', "Konten '{$setting->key}' berhasil diperbarui.");
+        $activeTab = $request->input('active_tab', '');
+        $redirectUrl = route('admin.settings.index');
+        if ($activeTab) {
+            $redirectUrl .= '?tab=' . urlencode($activeTab);
+        }
+
+        return redirect($redirectUrl)->with('success', "Konten '{$setting->key}' berhasil diperbarui.");
     }
 }

@@ -69,9 +69,8 @@
                                 zoomControl: true
                             });
 
-                            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-                                subdomains: 'abcd',
+                            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
                                 maxZoom: 19
                             }).addTo(map);
 
@@ -123,9 +122,14 @@
                 <div class="bg-brand-darkgreen text-white rounded-xl shadow-sm border border-brand-green/20 p-6 text-center">
                     <h4 class="font-bold text-sm mb-2 text-brand-yellow">{{ db_trans('village_sidebar_cta_title', 'Ikut Memberdayakan!', 'Join the Empowerment!') }}</h4>
                     <p class="text-xs text-gray-200 mb-4 leading-relaxed">{{ db_trans('village_sidebar_cta_desc', 'Bergabunglah bersama kami untuk memajukan perekonomian dan kesiapsiagaan desa pesisir.', 'Join us to advance the economy and preparedness of coastal villages.') }}</p>
-                    <a href="{{ route('public.volunteer.index') }}" class="inline-block bg-brand-orange text-white text-xs font-semibold px-4 py-2.5 rounded hover:bg-orange-600 shadow transition">
-                        {{ db_trans('village_sidebar_cta_btn', 'Daftar Relawan', 'Register as Volunteer') }}
-                    </a>
+                    <div class="flex flex-col sm:flex-row lg:flex-col gap-2 justify-center">
+                        <a href="{{ route('public.volunteer.index') }}" class="inline-block bg-brand-orange text-white text-xs font-semibold px-4 py-2.5 rounded hover:bg-orange-600 shadow transition">
+                            {{ db_trans('village_sidebar_cta_btn', 'Daftar Relawan', 'Register as Volunteer') }}
+                        </a>
+                        <a href="{{ route('public.pages.mitra') }}" class="inline-block bg-white text-brand-darkgreen text-xs font-bold px-4 py-2.5 rounded hover:bg-brand-yellow hover:text-gray-900 shadow transition">
+                            {{ db_trans('village_sidebar_cta_mitra_btn', 'Daftar Jadi Mitra', 'Become a Partner') }}
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

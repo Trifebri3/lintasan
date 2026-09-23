@@ -13,24 +13,30 @@ class ProgramController extends Controller
 {
     public function index()
     {
-        $programs = Program::all();
+        $programs = Program::orderBy('sort_order')->get();
         return view('admin.program.index', compact('programs'));
     }
 
     public function create()
     {
-        return view('admin.program.create');
+        $nextOrder = (Program::max('sort_order') ?? 0) + 1;
+        return view('admin.program.create', compact('nextOrder'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'title_en' => 'nullable|string|max:255',
+            'short_description' => 'nullable|string|max:500',
+            'short_description_en' => 'nullable|string|max:500',
             'description' => 'required|string',
+            'description_en' => 'nullable|string',
             'icon' => 'required|string|max:50',
             'color_class' => 'required|string|max:50',
             'text_color' => 'required|string|max:50',
             'image_url' => 'required|image|mimes:jpeg,png,jpg,gif,webp,svg|max:4096',
+            'sort_order' => 'nullable|integer',
         ], $this->validationMessages(true));
 
         try {
@@ -39,9 +45,12 @@ class ProgramController extends Controller
                 $image_url = \App\Helpers\ImageHelper::compressAndSave($request->file('image_url'), 'programs', $request->title);
             }
 
+            $order = $request->filled('sort_order') ? (int)$request->sort_order : ((Program::max('sort_order') ?? 0) + 1);
+
             Program::create(array_merge($validated, [
                 'image_url' => $image_url,
-                'link' => '#'
+                'link' => '#',
+                'sort_order' => $order
             ]));
 
             return redirect()->route('admin.programs.index')->with('success', 'Program berhasil ditambahkan.');
@@ -63,11 +72,16 @@ class ProgramController extends Controller
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'title_en' => 'nullable|string|max:255',
+            'short_description' => 'nullable|string|max:500',
+            'short_description_en' => 'nullable|string|max:500',
             'description' => 'required|string',
+            'description_en' => 'nullable|string',
             'icon' => 'required|string|max:50',
             'color_class' => 'required|string|max:50',
             'text_color' => 'required|string|max:50',
             'image_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:4096',
+            'sort_order' => 'nullable|integer',
         ], $this->validationMessages(false));
 
         try {
@@ -78,8 +92,11 @@ class ProgramController extends Controller
                 $image_url = \App\Helpers\ImageHelper::compressAndSave($request->file('image_url'), 'programs', $request->title);
             }
 
+            $order = $request->filled('sort_order') ? (int)$request->sort_order : $program->sort_order;
+
             $program->update(array_merge($validated, [
-                'image_url' => $image_url
+                'image_url' => $image_url,
+                'sort_order' => $order
             ]));
 
             return redirect()->route('admin.programs.index')->with('success', 'Program berhasil diperbarui.');

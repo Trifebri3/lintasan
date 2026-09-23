@@ -24,7 +24,8 @@ class GalleryController extends Controller
      */
     public function create()
     {
-        return view('admin.galeri.create');
+        $nextOrder = (Gallery::max('sort_order') ?? 0) + 1;
+        return view('admin.galeri.create', compact('nextOrder'));
     }
 
     /**
@@ -36,6 +37,7 @@ class GalleryController extends Controller
             'title_id' => 'nullable|string|max:255',
             'title_en' => 'nullable|string|max:255',
             'type' => 'required|in:image,video',
+            'layout_size' => 'nullable|in:normal,featured,wide,tall',
             'sort_order' => 'required|integer',
         ];
 
@@ -69,6 +71,7 @@ class GalleryController extends Controller
                 'title_id' => $request->title_id,
                 'title_en' => $request->title_en,
                 'type' => $request->type,
+                'layout_size' => $request->input('layout_size', 'normal'),
                 'image_path' => $image_path,
                 'video_url' => $video_url,
                 'youtube_id' => $youtube_id,
@@ -103,6 +106,7 @@ class GalleryController extends Controller
             'title_id' => 'nullable|string|max:255',
             'title_en' => 'nullable|string|max:255',
             'type' => 'required|in:image,video',
+            'layout_size' => 'nullable|in:normal,featured,wide,tall',
             'sort_order' => 'required|integer',
         ];
 
@@ -149,6 +153,7 @@ class GalleryController extends Controller
                 'title_id' => $request->title_id,
                 'title_en' => $request->title_en,
                 'type' => $request->type,
+                'layout_size' => $request->input('layout_size', 'normal'),
                 'image_path' => $image_path,
                 'video_url' => $video_url,
                 'youtube_id' => $youtube_id,

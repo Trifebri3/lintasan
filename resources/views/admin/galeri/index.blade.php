@@ -10,7 +10,10 @@
                 <h1 class="text-2xl font-extrabold text-gray-900 tracking-tight">Kelola Galeri</h1>
                 <p class="text-xs text-gray-500 mt-1">Tambahkan, edit, atau hapus dokumentasi foto dan video YouTube Yayasan LINTASAN.</p>
             </div>
-            <div class="mt-4 sm:mt-0">
+            <div class="mt-4 sm:mt-0 flex items-center gap-2">
+                <button type="button" onclick="openLivePreviewModal('/galeri')" class="bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 text-xs font-bold px-3.5 py-2.5 rounded-lg transition flex items-center gap-1.5 shadow-sm">
+                    <i class="fas fa-desktop"></i> Live Preview Galeri
+                </button>
                 <a href="{{ route('admin.galleries.create') }}" class="inline-flex items-center gap-2 bg-brand-green text-white text-xs font-bold px-4 py-2.5 rounded-lg hover:bg-brand-darkgreen shadow transition">
                     <i class="fas fa-plus"></i> Tambah Item Galeri
                 </a>
@@ -33,7 +36,8 @@
                         <tr class="bg-gray-50 text-gray-400 font-bold uppercase text-[10px] tracking-wider border-b border-gray-150">
                             <th class="p-4 w-28">Preview</th>
                             <th class="p-4">Judul (Bilingual)</th>
-                            <th class="p-4 w-32">Tipe</th>
+                            <th class="p-4 w-28">Tipe</th>
+                            <th class="p-4 w-32">Ukuran Bento</th>
                             <th class="p-4 w-24 text-center">Urutan</th>
                             <th class="p-4 w-36 text-center">Aksi</th>
                         </tr>
@@ -68,8 +72,29 @@
                                         </span>
                                     @endif
                                 </td>
-                                <td class="p-4 text-center font-bold text-gray-900">
-                                    {{ $item->sort_order }}
+                                <td class="p-4">
+                                    @if($item->layout_size === 'featured')
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-purple-50 text-purple-700 font-extrabold text-[9px] border border-purple-200 shadow-2xs">
+                                            <i class="fas fa-star text-[9px]"></i> Besar (2x2)
+                                        </span>
+                                    @elseif($item->layout_size === 'wide')
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 font-extrabold text-[9px] border border-blue-200 shadow-2xs">
+                                            <i class="fas fa-arrows-left-right text-[9px]"></i> Lebar (2x1)
+                                        </span>
+                                    @elseif($item->layout_size === 'tall')
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 font-extrabold text-[9px] border border-amber-200 shadow-2xs">
+                                            <i class="fas fa-arrows-up-down text-[9px]"></i> Tinggi (1x2)
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-gray-100 text-gray-700 font-bold text-[9px] border border-gray-200 shadow-2xs">
+                                            <i class="fas fa-square text-[9px]"></i> Normal (1x1)
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="p-4 text-center">
+                                    <span class="inline-block px-2.5 py-1 rounded-lg bg-gray-100 border border-gray-200 font-black text-gray-900 text-xs">
+                                        #{{ $item->sort_order }}
+                                    </span>
                                 </td>
                                 <td class="p-4">
                                     <div class="flex items-center justify-center gap-2">

@@ -80,7 +80,7 @@
             </div>
 
             <div>
-                <label for="button_link" class="block font-bold text-gray-700 uppercase mb-2">Custom Link Tombol "Lihat Dampak" (Opsional)</label>
+                <label for="button_link" class="block font-bold text-gray-700 uppercase mb-2">Custom Link Tombol "Cerita Dari Lapangan" (Opsional)</label>
                 <input type="text" id="button_link" name="button_link" value="{{ old('button_link', $slide->button_link) }}" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 focus:border-brand-green outline-none" placeholder="Contoh: /donasi atau https://example.com (Kosongkan untuk link default /cerita-dampak)">
                 @error('button_link') <p class="text-red-500 text-[10px] mt-1">{{ $message }}</p> @enderror
             </div>

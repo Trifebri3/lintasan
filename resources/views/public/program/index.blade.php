@@ -30,28 +30,8 @@
                             </div>
                         </div>
                         <div class="p-6 pt-8">
-                            @php
-                                $progTitle = $program->title;
-                                $progDesc = $program->description;
-                                if (str_contains($program->title, 'SPAB')) {
-                                    $progTitle = db_trans('program_spab_title', 'SPAB (Sekolah Aman Bencana)', 'Disaster Preparedness School (SPAB)');
-                                    $progDesc = db_trans('program_spab_desc', 'Membangun budaya sadar bencana di sekolah dan masyarakat.', 'Building a culture of disaster awareness in schools and communities.');
-                                } elseif (str_contains($program->title, 'Tabur Laut')) {
-                                    $progTitle = db_trans('program_tabur_title', 'Tabur Laut', 'Tabur Laut Program');
-                                    $progDesc = db_trans('program_tabur_desc', 'Penguatan ekonomi nelayan melalui pendampingan usaha dan inovasi.', 'Strengthening fishermen economics through business guidance and innovation.');
-                                } elseif (str_contains($program->title, 'SMK Bisa')) {
-                                    $progTitle = db_trans('program_smk_title', 'SMK Bisa! SMK Jago!', 'SMK Success Program');
-                                    $progDesc = db_trans('program_smk_desc', 'Meningkatkan kompetensi siswa SMK agar siap kerja dan berdaya saing.', 'Enhancing vocational student competency to be ready-to-work and competitive.');
-                                } elseif (str_contains($program->title, 'Hutan')) {
-                                    $progTitle = db_trans('program_forest_title', 'Hutan Anak Negeri', 'National Forest Program');
-                                    $progDesc = db_trans('program_forest_desc', 'Gerakan menanam dan merawat hutan untuk masa depan bumi yang lebih baik.', 'Reforesting and caring for forests for a better future of our planet.');
-                                } elseif (str_contains($program->title, 'Kesehatan')) {
-                                    $progTitle = db_trans('program_health_title', 'Kesehatan Masyarakat', 'Public Health Initiative');
-                                    $progDesc = db_trans('program_health_desc', 'Pemeriksaan kesehatan dan edukasi hidup sehat bagi komunitas.', 'Providing health checkups and healthy lifestyle education for communities.');
-                                }
-                            @endphp
-                            <h3 class="font-bold text-lg text-gray-900 mb-2 leading-tight">{{ $progTitle }}</h3>
-                            <p class="text-xs text-gray-500 mb-4 leading-relaxed line-clamp-3">{{ strip_tags($progDesc) }}</p>
+                            <h3 class="font-bold text-lg text-gray-900 mb-2 leading-tight">{{ $program->title }}</h3>
+                            <p class="text-xs text-gray-500 mb-4 leading-relaxed line-clamp-3">{{ $program->short_description }}</p>
                         </div>
                     </div>
                     <div class="p-6 pt-0">

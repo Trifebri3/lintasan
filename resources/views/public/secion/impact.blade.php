@@ -23,17 +23,17 @@
         </div>
     </div>
     
-    <!-- Colored Blocks Grid (Full Width) with Background Image silhouette and translucent blocks -->
-    <div class="w-full grid grid-cols-2 md:grid-cols-6 text-white text-center bg-cover bg-center relative" style="background-image: url('{{ $settings['bg_photo_impact'] ?? 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80' }}');">
+    <!-- Colored Blocks Grid (Full Width) -->
+    <div class="w-full grid grid-cols-2 md:grid-cols-6 text-white text-center relative overflow-hidden">
         @php
-            // Social-media inspired colorful gradients with thinner opacity (70% / 0.7) for clear silhouette exposure
+            // Vibrant solid gradients with Gray & Yellow combination
             $gradients = [
-                'bg-gradient-to-br from-[#833ab4]/70 via-[#fd1d1d]/70 to-[#fcb045]/70', // Instagram Gradient
-                'bg-gradient-to-br from-[#00c6ff]/70 to-[#0072ff]/70',                // Royal Blue/Teal
-                'bg-gradient-to-br from-[#f857a6]/70 to-[#ff5858]/70',                // Rose/Orange
-                'bg-gradient-to-br from-[#11998e]/70 to-[#38ef7d]/70',                // Aurora Green/Teal
-                'bg-gradient-to-br from-[#ff9966]/70 to-[#ff5e62]/70',                // Sunset Orange/Red
-                'bg-gradient-to-br from-[#da1b60]/70 to-[#ff8a00]/70',                // Pink/Gold
+                'bg-gradient-to-br from-[#e11d48] to-[#be123c]', // Merah / Rose Red
+                'bg-gradient-to-br from-[#0284c7] to-[#0072ff]', // Biru / Ocean Blue
+                'bg-gradient-to-br from-[#64748b] to-[#475569]', // Abu-abu / Slate Gray
+                'bg-gradient-to-br from-[#11998e] to-[#38ef7d]', // Hijau / Emerald Green
+                'bg-gradient-to-br from-[#f59e0b] to-[#d97706]', // Kuning / Amber Yellow
+                'bg-gradient-to-br from-[#ff9966] to-[#ff5e62]', // Jingga / Sunset Orange
             ];
             
             $fallbackStats = [
@@ -65,15 +65,15 @@
                 $suffix = preg_replace('/[0-9.]/', '', $rawValue);
                 $hasDot = str_contains($rawValue, '.');
             @endphp
-            <div class="{{ $bg }} px-4 py-8 flex flex-col justify-center items-center transition duration-500 hover:scale-[1.03] hover:z-10 shadow-lg min-h-[140px] backdrop-blur-[1.5px]">
-                <div class="text-2xl mb-1.5 opacity-90"><i class="fas {{ $stat->icon }}"></i></div>
-                <h3 class="text-xl font-extrabold leading-tight stat-counter" 
+            <div class="{{ $bg }} px-4 py-8 flex flex-col justify-center items-center transition duration-500 hover:scale-[1.03] hover:z-10 shadow-lg min-h-[140px]">
+                <div class="text-2xl mb-1.5 opacity-95 drop-shadow-sm"><i class="fas {{ $stat->icon }}"></i></div>
+                <h3 class="text-xl font-extrabold leading-tight stat-counter drop-shadow-sm" 
                     data-count="{{ $cleanValue }}" 
                     data-suffix="{{ $suffix }}" 
                     data-format="{{ $hasDot ? 'true' : 'false' }}">
                     0{{ $suffix }}
                 </h3>
-                <p class="text-[10px] uppercase font-bold tracking-wider opacity-85 mt-1">{{ $statLabel }}</p>
+                <p class="text-[10px] uppercase font-bold tracking-wider opacity-90 mt-1 drop-shadow-sm">{{ $statLabel }}</p>
             </div>
         @empty
             @foreach($fallbackStats as $index => $stat)
@@ -85,15 +85,15 @@
                     $suffix = preg_replace('/[0-9.]/', '', $rawValue);
                     $hasDot = str_contains($rawValue, '.');
                 @endphp
-                <div class="{{ $bg }} px-4 py-8 flex flex-col justify-center items-center transition duration-500 hover:scale-[1.03] hover:z-10 shadow-lg min-h-[140px] backdrop-blur-[1.5px]">
-                    <div class="text-2xl mb-1.5 opacity-90"><i class="fas {{ $stat['icon'] }}"></i></div>
-                    <h3 class="text-xl font-extrabold leading-tight stat-counter" 
+                <div class="{{ $bg }} px-4 py-8 flex flex-col justify-center items-center transition duration-500 hover:scale-[1.03] hover:z-10 shadow-lg min-h-[140px]">
+                    <div class="text-2xl mb-1.5 opacity-95 drop-shadow-sm"><i class="fas {{ $stat['icon'] }}"></i></div>
+                    <h3 class="text-xl font-extrabold leading-tight stat-counter drop-shadow-sm" 
                         data-count="{{ $cleanValue }}" 
                         data-suffix="{{ $suffix }}" 
                         data-format="{{ $hasDot ? 'true' : 'false' }}">
                         0{{ $suffix }}
                     </h3>
-                    <p class="text-[10px] uppercase font-bold tracking-wider opacity-85 mt-1">{{ $label }}</p>
+                    <p class="text-[10px] uppercase font-bold tracking-wider opacity-90 mt-1 drop-shadow-sm">{{ $label }}</p>
                 </div>
             @endforeach
         @endforelse

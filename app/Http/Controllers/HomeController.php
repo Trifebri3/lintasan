@@ -41,7 +41,7 @@ class HomeController extends Controller
             ->orderBy('sort_order')
             ->get();
 
-        $programs = Program::all();
+        $programs = Program::orderBy('sort_order')->get();
 
         $impactStats = Statistic::where('group', 'connected_impact')
             ->orderBy('sort_order')

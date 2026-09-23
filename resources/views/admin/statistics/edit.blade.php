@@ -78,14 +78,15 @@
                             @php
                                 $currentColor = old('color_class', $statistic->color_class);
                                 $colorsMap = [
-                                    'bg-gradient-to-br from-[#ff9966]/70 to-[#ff5e62]/70' => 'Jingga & Merah (Sunset)',
-                                    'bg-gradient-to-br from-[#00c6ff]/70 to-[#0072ff]/70' => 'Biru Muda & Biru Tua (Ocean)',
-                                    'bg-gradient-to-br from-[#f857a6]/70 to-[#ff5858]/70' => 'Merah Jambu & Rose',
-                                    'bg-gradient-to-br from-[#11998e]/70 to-[#38ef7d]/70' => 'Hijau Toska & Emerald',
-                                    'bg-gradient-to-br from-[#833ab4]/70 via-[#fd1d1d]/70 to-[#fcb045]/70' => 'Instagram Gradasi (Ungu & Oranye)',
-                                    'bg-gradient-to-br from-[#da1b60]/70 to-[#ff8a00]/70' => 'Merah Tua & Gold',
-                                    'bg-gradient-to-br from-[#134e5e]/70 to-[#71b280]/70' => 'Hijau Hutan (Forest Green)',
-                                    'bg-gradient-to-br from-[#4e54c8]/70 to-[#8f94fb]/70' => 'Ungu Lavender',
+                                    'bg-gradient-to-br from-[#e11d48] to-[#be123c]' => 'Merah & Rose',
+                                    'bg-gradient-to-br from-[#0284c7] to-[#0072ff]' => 'Biru Muda & Biru Tua (Ocean)',
+                                    'bg-gradient-to-br from-[#64748b] to-[#475569]' => 'Abu-abu Modern (Slate Gray)',
+                                    'bg-gradient-to-br from-[#11998e] to-[#38ef7d]' => 'Hijau Toska & Emerald',
+                                    'bg-gradient-to-br from-[#f59e0b] to-[#d97706]' => 'Kuning Emas & Amber (Yellow)',
+                                    'bg-gradient-to-br from-[#ff9966] to-[#ff5e62]' => 'Jingga & Oranye (Sunset)',
+                                    'bg-gradient-to-br from-[#833ab4] via-[#fd1d1d] to-[#fcb045]' => 'Instagram Gradasi (Ungu & Oranye)',
+                                    'bg-gradient-to-br from-[#475569] to-[#1e293b]' => 'Abu-abu Gelap (Dark Charcoal)',
+                                    'bg-gradient-to-br from-[#4e54c8] to-[#8f94fb]' => 'Ungu Lavender',
                                 ];
                                 // If currently null, assign default based on index placeholder
                                 if (!$currentColor) {

@@ -20,7 +20,7 @@
                     {{ db_trans('gallery_badge', 'Galeri Dokumentasi', 'Documentation Gallery') }}
                 </span>
                 <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">
-                    {{ db_trans('gallery_title', 'Galeri Aktivitas Dampak', 'Our Impact Activities') }}
+                    {{ db_trans('gallery_title', 'Galeri Aktifitas Kami', 'Our Activity Gallery') }}
                 </h1>
                 <p class="text-gray-500 text-sm max-w-xl mt-3 leading-relaxed">
                     {{ db_trans('gallery_desc', 'Dokumentasi visual perubahan nyata dan inisiatif ketangguhan pesisir di seluruh daerah dampingan kami.', 'Visual documentation of positive changes and coastal resilience initiatives in our assisted areas.') }}
@@ -41,54 +41,86 @@
             </button>
         </div>
 
-        <!-- Gallery Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6" id="gallery-grid">
+        <!-- Bento Gallery Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 auto-rows-[220px] md:auto-rows-[240px]" id="gallery-grid">
             @forelse($galleryItems as $item)
-                <div class="gallery-item group relative rounded-xl overflow-hidden border border-gray-100 bg-white shadow-sm hover:shadow-md transition-all duration-300 transform" data-type="{{ $item->type }}">
+                @php
+                    $isFeatured = $item->layout_size === 'featured';
+                    $isWide = $item->layout_size === 'wide';
+                    $isTall = $item->layout_size === 'tall';
+                @endphp
+                <div class="gallery-item group relative rounded-2xl overflow-hidden border border-gray-200/80 bg-gray-900 shadow-sm hover:shadow-xl transition-all duration-300 transform flex flex-col justify-end {{ $item->grid_span_class }}" data-type="{{ $item->type }}">
                     
                     @if($item->type === 'image')
-                        <!-- Image Layout -->
-                        <div class="aspect-video w-full bg-gray-100 overflow-hidden relative">
-                            <img src="{{ $item->image_path }}" alt="Gallery Image" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500">
-                            
-                            <!-- Overlay on hover -->
-                            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
-                                <button onclick="openLightbox('image', '{{ $item->image_path }}', '{{ $item->title }}')" class="bg-white/95 text-brand-green hover:bg-brand-green hover:text-white p-3 rounded-full shadow transition-all transform scale-95 group-hover:scale-100 duration-300" aria-label="Zoom image">
-                                    <i class="fas fa-magnifying-glass-plus text-base"></i>
-                                </button>
-                            </div>
-                        </div>
+                        <!-- Image Element (Fills full Bento card) -->
+                        <img src="{{ $item->image_path }}" alt="{{ $item->title ?: 'Gallery Photo' }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-108 transition-all duration-700 ease-out">
                     @else
-                        <!-- Video Layout -->
-                        <div class="aspect-video w-full bg-black overflow-hidden relative">
-                            <img src="https://img.youtube.com/vi/{{ $item->youtube_id }}/mqdefault.jpg" alt="Video Thumbnail" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 opacity-85">
-                            
-                            <!-- Red YouTube Play Button Overlay -->
-                            <div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition duration-300">
-                                <button onclick="openLightbox('video', '{{ $item->embed_url }}', '{{ $item->title }}')" class="bg-red-600 hover:bg-red-700 text-white p-3.5 rounded-full shadow-lg transition-all transform hover:scale-110 duration-300 flex items-center justify-center cursor-pointer" aria-label="Play video">
-                                    <i class="fas fa-play text-sm ml-0.5"></i>
-                                </button>
-                            </div>
-                            
-                            <!-- Video label badge -->
-                            <span class="absolute top-2 left-2 bg-red-600 text-white text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider flex items-center gap-1 shadow-sm">
-                                <i class="fab fa-youtube"></i> Video
-                            </span>
-                        </div>
+                        <!-- Video Thumbnail -->
+                        <img src="https://img.youtube.com/vi/{{ $item->youtube_id }}/hqdefault.jpg" alt="{{ $item->title ?: 'Video Thumbnail' }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-108 transition-all duration-700 ease-out opacity-90">
                     @endif
 
-                    @if($item->title)
-                        <!-- Card Footer Caption -->
-                        <div class="p-4 border-t border-gray-50">
-                            <span class="text-[9px] font-extrabold text-brand-green uppercase tracking-wider mb-1 block">
-                                {{ db_trans('gallery_card_badge', 'Dokumentasi', 'Documentation') }}
-                            </span>
-                            <h4 class="font-bold text-xs text-gray-800 line-clamp-2">{{ $item->title }}</h4>
+                    <!-- Subtle dark gradient overlay -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-gray-950/90 via-gray-950/30 to-black/20 group-hover:from-gray-950/95 group-hover:via-gray-950/45 transition-all duration-300"></div>
+
+                    <!-- Top Bar Badges -->
+                    <div class="absolute top-3 left-3 right-3 flex items-center justify-between z-10 pointer-events-none">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            @if($item->type === 'video')
+                                <span class="bg-red-600/90 text-white text-[9px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider backdrop-blur-xs flex items-center gap-1 shadow-sm">
+                                    <i class="fab fa-youtube"></i> Video
+                                </span>
+                            @else
+                                <span class="bg-black/40 text-white/90 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider backdrop-blur-xs flex items-center gap-1 border border-white/20">
+                                    <i class="fas fa-camera text-[8px]"></i> Foto
+                                </span>
+                            @endif
+
+                            @if($isFeatured)
+                                <span class="bg-purple-600/90 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider backdrop-blur-xs flex items-center gap-1 shadow-sm">
+                                    <i class="fas fa-star text-[8px]"></i> Sorotan
+                                </span>
+                            @elseif($isWide)
+                                <span class="bg-blue-600/80 text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider backdrop-blur-xs flex items-center gap-1">
+                                    <i class="fas fa-panorama text-[8px]"></i> Panorama
+                                </span>
+                            @elseif($isTall)
+                                <span class="bg-amber-600/80 text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider backdrop-blur-xs flex items-center gap-1">
+                                    <i class="fas fa-arrows-up-down text-[8px]"></i> Potret
+                                </span>
+                            @endif
                         </div>
-                    @endif
+
+                        <!-- Order badge -->
+                        <span class="text-[9px] font-black px-2 py-0.5 rounded-full bg-white/20 text-white/90 backdrop-blur-xs border border-white/20">
+                            #{{ $item->sort_order }}
+                        </span>
+                    </div>
+
+                    <!-- Center Trigger Button -->
+                    <div class="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+                        @if($item->type === 'image')
+                            <button onclick="openLightbox('image', '{{ $item->image_path }}', '{{ addslashes($item->title) }}')" class="pointer-events-auto bg-white/90 hover:bg-white text-emerald-700 hover:text-emerald-800 w-11 h-11 rounded-full shadow-lg transition-all duration-300 transform scale-75 opacity-0 group-hover:opacity-100 group-hover:scale-100 flex items-center justify-center cursor-pointer" aria-label="Lihat Foto Lebih Besar">
+                                <i class="fas fa-magnifying-glass-plus text-base"></i>
+                            </button>
+                        @else
+                            <button onclick="openLightbox('video', '{{ $item->embed_url }}', '{{ addslashes($item->title) }}')" class="pointer-events-auto bg-red-600 hover:bg-red-700 text-white w-12 h-12 rounded-full shadow-xl transition-all duration-300 transform group-hover:scale-110 flex items-center justify-center cursor-pointer" aria-label="Putar Video">
+                                <i class="fas fa-play text-sm ml-0.5"></i>
+                            </button>
+                        @endif
+                    </div>
+
+                    <!-- Bottom Caption -->
+                    <div class="relative z-10 p-4 sm:p-5 pointer-events-auto">
+                        <span class="text-[9px] font-black text-brand-orange uppercase tracking-wider block mb-1">
+                            {{ db_trans('gallery_card_badge', 'Dokumentasi Yayasan LINTASAN', 'Yayasan LINTASAN Documentation') }}
+                        </span>
+                        <h3 class="font-extrabold text-white {{ $isFeatured ? 'text-sm sm:text-base' : 'text-xs sm:text-sm' }} line-clamp-2 leading-snug drop-shadow-sm group-hover:text-emerald-200 transition-colors">
+                            {{ $item->title ?: (session('locale') == 'en' ? 'Coastal Resilience Activity' : 'Aksi Dokumentasi Pesisir') }}
+                        </h3>
+                    </div>
                 </div>
             @empty
-                <div class="col-span-full text-center py-16 bg-white rounded-xl border border-gray-100 shadow-sm">
+                <div class="col-span-full text-center py-16 bg-white rounded-2xl border-2 border-dashed border-gray-200 shadow-sm">
                     <div class="text-gray-300 text-5xl mb-4"><i class="fas fa-images"></i></div>
                     <p class="text-gray-500 text-sm font-semibold">
                         {{ db_trans('gallery_empty_message', 'Belum ada dokumentasi galeri yang tersedia.', 'No gallery documentation available yet.') }}

@@ -60,39 +60,27 @@
                 @endif
             </div>
 
-            <!-- 4 Pillars -->
+            <!-- Nilai Lintasan (Dinamis dari Database) -->
             <div>
                 <h3 class="text-lg font-bold text-gray-900 mb-6 border-b pb-1 flex items-center gap-2">
-                    <i class="fas fa-cubes text-blue-600 text-sm"></i> {{ session('locale') == 'en' ? 'LINTASAN Columns' : 'Nilai & Pilar LINTASAN' }}
+                    <i class="fas fa-cubes text-blue-600 text-sm"></i> {{ session('locale') == 'en' ? 'LINTASAN Values' : 'Nilai Lintasan' }}
                 </h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs text-gray-500 leading-relaxed">
-                    <div class="p-5 bg-orange-50/50 border border-orange-100/50 rounded-xl hover:-translate-y-0.5 transition duration-200">
-                        <h4 class="font-extrabold text-brand-orange text-sm mb-2 flex items-center gap-1.5">
-                            <i class="fas fa-handshake"></i> {{ session('locale') == 'en' ? 'Collaboration' : 'Kolaborasi' }}
-                        </h4>
-                        <div>{!! $settings['about_pillar_kolaborasi'] ?? '' !!}</div>
-                    </div>
-
-                    <div class="p-5 bg-green-50/50 border border-green-100/50 rounded-xl hover:-translate-y-0.5 transition duration-200">
-                        <h4 class="font-extrabold text-brand-green text-sm mb-2 flex items-center gap-1.5">
-                            <i class="fas fa-graduation-cap"></i> {{ session('locale') == 'en' ? 'Education' : 'Edukasi' }}
-                        </h4>
-                        <div>{!! $settings['about_pillar_edukasi'] ?? '' !!}</div>
-                    </div>
-
-                    <div class="p-5 bg-blue-50/50 border border-blue-100/50 rounded-xl hover:-translate-y-0.5 transition duration-200">
-                        <h4 class="font-extrabold text-blue-600 text-sm mb-2 flex items-center gap-1.5">
-                            <i class="fas fa-lightbulb"></i> {{ session('locale') == 'en' ? 'Innovation' : 'Innovasi' }}
-                        </h4>
-                        <div>{!! $settings['about_pillar_inovasi'] ?? '' !!}</div>
-                    </div>
-
-                    <div class="p-5 bg-purple-50/50 border border-purple-100/50 rounded-xl hover:-translate-y-0.5 transition duration-200">
-                        <h4 class="font-extrabold text-purple-600 text-sm mb-2 flex items-center gap-1.5">
-                            <i class="fas fa-circle-nodes"></i> {{ session('locale') == 'en' ? 'Transparency' : 'Transparansi' }}
-                        </h4>
-                        <div>{!! $settings['about_pillar_transparansi'] ?? '' !!}</div>
-                    </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-xs text-gray-500 leading-relaxed">
+                    @forelse($organizationValues as $val)
+                        <div class="p-5 {{ $val->bg_class ?? 'bg-emerald-50/50' }} border {{ $val->border_class ?? 'border-emerald-100/50' }} rounded-xl hover:-translate-y-0.5 transition duration-200">
+                            <h4 class="font-extrabold {{ $val->color_class ?? 'text-emerald-700' }} text-sm mb-2 flex items-center gap-1.5">
+                                <i class="fas {{ $val->icon ?: 'fa-award' }}"></i> {{ $val->title }}
+                            </h4>
+                            <div class="text-xs text-gray-600 leading-relaxed font-normal">
+                                {!! $val->description !!}
+                            </div>
+                        </div>
+                    @empty
+                        <div class="col-span-full py-8 text-center text-gray-400 text-xs">
+                            <i class="fas fa-info-circle mb-1 text-sm"></i>
+                            <p>{{ session('locale') == 'en' ? 'No values have been added yet.' : 'Belum ada nilai lintasan yang ditambahkan.' }}</p>
+                        </div>
+                    @endforelse
                 </div>
             </div>
 

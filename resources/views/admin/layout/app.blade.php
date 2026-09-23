@@ -62,10 +62,10 @@
 <body class="bg-gray-50 text-gray-800 font-sans antialiased flex min-h-screen">
 
     <!-- Sidebar -->
-    <aside class="w-64 bg-[#0a2016] text-white shrink-0 hidden md:flex flex-col justify-between p-6">
-        <div>
+    <aside class="w-64 bg-[#0a2016] text-white shrink-0 hidden md:flex flex-col justify-between p-5 border-r border-emerald-950/40 select-none">
+        <div class="flex flex-col h-full overflow-hidden">
             <!-- Sidebar Header -->
-            <div class="mb-8">
+            <div class="mb-5 shrink-0 px-2">
                 <div class="text-white font-bold text-xl tracking-wider flex items-center leading-none">
                     LINTAS<span class="relative inline-block text-white">A<span class="absolute -top-2.5 left-1/2 -translate-x-1/2 text-xs flex gap-0.5"><i class="fas fa-leaf text-[9px] text-brand-yellow rotate-12"></i><i class="fas fa-leaf text-[9px] text-brand-green -rotate-45 -ml-1"></i></span></span>N
                     <span class="text-brand-yellow font-normal text-xs ml-1 border-l pl-2 border-white/20">ADMIN</span>
@@ -73,76 +73,141 @@
                 <p class="text-[8px] text-gray-400 tracking-widest mt-1">YAYASAN KETANGGUHAN PESISIR</p>
             </div>
 
-            <!-- Nav Items -->
-            <nav class="space-y-2 text-sm font-medium">
+            <!-- Nav Items (Scrollable) -->
+            <nav class="flex-1 overflow-y-auto pr-1 space-y-4 text-xs font-medium">
                 @php
-                    $activeClass = 'bg-brand-green text-white font-bold relative overflow-hidden before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1.5 before:bg-brand-yellow';
-                    $inactiveClass = 'text-gray-300 hover:bg-white/5 hover:text-white';
+                    $activeClass = 'bg-brand-green text-white font-bold shadow-sm relative overflow-hidden before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1.5 before:bg-brand-yellow';
+                    $inactiveClass = 'text-gray-300 hover:bg-white/10 hover:text-white';
                 @endphp
+
+                <!-- KELOMPOK 1: UTAMA -->
+                <div>
+                    <div class="text-[10px] uppercase font-bold tracking-wider text-emerald-400/70 px-3 pb-1.5 flex items-center justify-between">
+                        <span>Utama</span>
+                    </div>
+                    <div class="space-y-1">
+                        @if(Auth::user()->role === 'admin')
+                            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg {{ request()->routeIs('admin.dashboard') ? $activeClass : $inactiveClass }} transition">
+                                <i class="fas fa-chart-line w-4 text-center"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        @endif
+                        <!-- Live Preview Trigger Button -->
+                        <button type="button" onclick="openLivePreviewModal('/')" class="w-full text-left flex items-center justify-between px-3.5 py-2.5 rounded-lg text-emerald-300 hover:text-white bg-emerald-950/40 hover:bg-emerald-900/60 border border-emerald-800/40 transition group">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-desktop w-4 text-center group-hover:scale-110 transition-transform text-emerald-400"></i>
+                                <span class="font-bold">Live Preview Web</span>
+                            </div>
+                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 tracking-wider">
+                                LIVE
+                            </span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KELOMPOK 2: KONTEN WEBSITE -->
+                <div>
+                    <div class="text-[10px] uppercase font-bold tracking-wider text-emerald-400/70 px-3 pb-1.5">
+                        <span>Konten Website</span>
+                    </div>
+                    <div class="space-y-1">
+                        @if(Auth::user()->role === 'admin')
+                            <a href="{{ route('admin.hero-images.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg {{ request()->routeIs('admin.hero-images.*') ? $activeClass : $inactiveClass }} transition">
+                                <i class="fas fa-images w-4 text-center"></i>
+                                <span>Slide Hero Banner</span>
+                            </a>
+                            <a href="{{ route('admin.settings.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg {{ request()->routeIs('admin.settings.*') ? $activeClass : $inactiveClass }} transition">
+                                <i class="fas fa-file-pen w-4 text-center"></i>
+                                <span>Konten Halaman & Nilai</span>
+                            </a>
+                            <a href="{{ route('admin.programs.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg {{ request()->routeIs('admin.programs.*') ? $activeClass : $inactiveClass }} transition">
+                                <i class="fas fa-hand-holding-heart w-4 text-center"></i>
+                                <span>Program Unggulan</span>
+                            </a>
+                        @endif
+                        <a href="{{ route('admin.stories.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg {{ request()->routeIs('admin.stories.*') ? $activeClass : $inactiveClass }} transition">
+                            <i class="fas fa-newspaper w-4 text-center"></i>
+                            <span>Cerita Lapangan</span>
+                        </a>
+                        @if(Auth::user()->role === 'admin')
+                            <a href="{{ route('admin.galleries.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg {{ request()->routeIs('admin.galleries.*') ? $activeClass : $inactiveClass }} transition">
+                                <i class="fas fa-photo-film w-4 text-center"></i>
+                                <span>Galeri Foto & Video</span>
+                            </a>
+                            <a href="{{ route('admin.statistics.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg {{ request()->routeIs('admin.statistics.*') ? $activeClass : $inactiveClass }} transition">
+                                <i class="fas fa-chart-simple w-4 text-center"></i>
+                                <span>Statistik & Capaian</span>
+                            </a>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- KELOMPOK 3: JARINGAN & MITRA -->
+                <div>
+                    <div class="text-[10px] uppercase font-bold tracking-wider text-emerald-400/70 px-3 pb-1.5">
+                        <span>Jaringan & Mitra</span>
+                    </div>
+                    <div class="space-y-1">
+                        @if(Auth::user()->role === 'admin')
+                            <a href="{{ route('admin.villages.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg {{ request()->routeIs('admin.villages.*') ? $activeClass : $inactiveClass }} transition">
+                                <i class="fas fa-map-location-dot w-4 text-center"></i>
+                                <span>Desa Mitra Lintasan</span>
+                            </a>
+                            <a href="{{ route('admin.partners.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg {{ request()->routeIs('admin.partners.*') ? $activeClass : $inactiveClass }} transition">
+                                <i class="fas fa-handshake w-4 text-center"></i>
+                                <span>Mitra & Kerjasama</span>
+                            </a>
+                            <a href="{{ route('admin.volunteers.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg {{ request()->routeIs('admin.volunteers.*') ? $activeClass : $inactiveClass }} transition">
+                                <i class="fas fa-users-line w-4 text-center"></i>
+                                <span>Pendaftar Relawan</span>
+                            </a>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- KELOMPOK 4: PENGATURAN -->
                 @if(Auth::user()->role === 'admin')
-                    <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ request()->routeIs('admin.dashboard') ? $activeClass : $inactiveClass }} transition">
-                        <i class="fas fa-chart-line w-5"></i> Dashboard
-                    </a>
-                    <a href="{{ route('admin.hero-images.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ request()->routeIs('admin.hero-images.*') ? $activeClass : $inactiveClass }} transition">
-                        <i class="fas fa-images w-5"></i> Slide Hero
-                    </a>
-                    <a href="{{ route('admin.settings.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ request()->routeIs('admin.settings.*') ? $activeClass : $inactiveClass }} transition">
-                        <i class="fas fa-file-lines w-5"></i> Konten Halaman
-                    </a>
-                    <a href="{{ route('admin.statistics.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ request()->routeIs('admin.statistics.*') ? $activeClass : $inactiveClass }} transition">
-                        <i class="fas fa-calculator w-5"></i> Statistik & Angka
-                    </a>
-                    <a href="{{ route('admin.programs.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ request()->routeIs('admin.programs.*') ? $activeClass : $inactiveClass }} transition">
-                        <i class="fas fa-tasks w-5"></i> Program
-                    </a>
-                    <a href="{{ route('admin.villages.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ request()->routeIs('admin.villages.*') ? $activeClass : $inactiveClass }} transition">
-                        <i class="fas fa-map-location-dot w-5"></i> Desa Mitra Lintasan
-                    </a>
-                @endif
-                <a href="{{ route('admin.stories.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ request()->routeIs('admin.stories.*') ? $activeClass : $inactiveClass }} transition">
-                    <i class="fas fa-book-open w-5"></i> Cerita Lapangan
-                </a>
-                @if(Auth::user()->role === 'admin')
-                    <a href="{{ route('admin.partners.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ request()->routeIs('admin.partners.*') ? $activeClass : $inactiveClass }} transition">
-                        <i class="fas fa-handshake w-5"></i> Mitra
-                    </a>
-                    <a href="{{ route('admin.galleries.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ request()->routeIs('admin.galleries.*') ? $activeClass : $inactiveClass }} transition">
-                        <i class="fas fa-images w-5"></i> Galeri
-                    </a>
-                    <a href="{{ route('admin.volunteers.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ request()->routeIs('admin.volunteers.*') ? $activeClass : $inactiveClass }} transition">
-                        <i class="fas fa-user-group w-5"></i> Pendaftar Relawan
-                    </a>
-                    <a href="{{ route('admin.social-links.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ request()->routeIs('admin.social-links.*') ? $activeClass : $inactiveClass }} transition">
-                        <i class="fab fa-instagram w-5 text-base"></i> Media Sosial
-                    </a>
+                    <div>
+                        <div class="text-[10px] uppercase font-bold tracking-wider text-emerald-400/70 px-3 pb-1.5">
+                            <span>Pengaturan</span>
+                        </div>
+                        <div class="space-y-1">
+                            <a href="{{ route('admin.social-links.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg {{ request()->routeIs('admin.social-links.*') ? $activeClass : $inactiveClass }} transition">
+                                <i class="fab fa-instagram w-4 text-center text-sm"></i>
+                                <span>Media Sosial & Kontak</span>
+                            </a>
+                        </div>
+                    </div>
                 @endif
             </nav>
         </div>
 
-        <div class="space-y-4 pt-4 border-t border-white/10">
-            <!-- User Info -->
-            <div class="flex items-center gap-2 text-xs">
-                <div class="w-8 h-8 rounded-full bg-brand-green flex items-center justify-center font-bold text-white shadow-inner">
-                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+        <!-- Sidebar Footer -->
+        <div class="space-y-3 pt-3 border-t border-white/10 shrink-0">
+            <!-- User Info Badge -->
+            <div class="flex items-center justify-between bg-white/5 p-2 rounded-lg border border-white/5">
+                <div class="flex items-center gap-2 text-xs min-w-0">
+                    <div class="w-7 h-7 rounded-full bg-brand-green flex items-center justify-center font-bold text-white shadow-inner shrink-0 text-xs">
+                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                    </div>
+                    <div class="min-w-0">
+                        <div class="font-bold text-gray-200 text-xs truncate">{{ Auth::user()->name }}</div>
+                        <span class="text-[9px] text-emerald-300 capitalize font-medium">{{ Auth::user()->role }}</span>
+                    </div>
                 </div>
-                <div>
-                    <div class="font-bold text-gray-200 line-clamp-1">{{ Auth::user()->name }}</div>
-                    <span class="text-[9px] text-gray-400 capitalize bg-white/5 px-2 py-0.5 rounded-full border border-white/5 font-semibold tracking-wide">{{ Auth::user()->role }}</span>
-                </div>
-            </div>
-            
-            <!-- Actions -->
-            <div class="space-y-2">
-                <a href="{{ route('home') }}" class="flex items-center gap-2.5 text-[10px] text-gray-400 hover:text-white transition">
-                    <i class="fas fa-arrow-left"></i> Lihat Situs Utama
-                </a>
-                <form action="{{ route('admin.logout') }}" method="POST" class="block">
+                <form action="{{ route('admin.logout') }}" method="POST" class="inline">
                     @csrf
-                    <button type="submit" class="w-full text-left flex items-center gap-2.5 text-[10px] text-red-400 hover:text-red-300 font-bold transition">
-                        <i class="fas fa-right-from-bracket"></i> Keluar (Logout)
+                    <button type="submit" title="Keluar (Logout)" class="w-7 h-7 rounded flex items-center justify-center text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition">
+                        <i class="fas fa-right-from-bracket text-xs"></i>
                     </button>
                 </form>
             </div>
+            
+            <!-- Quick Link to Public Web -->
+            <a href="{{ route('home') }}" target="_blank" class="w-full py-1.5 px-2.5 rounded-md text-[10px] font-semibold text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 flex items-center justify-center gap-1.5 transition">
+                <i class="fas fa-arrow-up-right-from-square text-[9px]"></i>
+                <span>Buka Website di Tab Baru</span>
+            </a>
         </div>
     </aside>
 
@@ -216,6 +281,9 @@
         <!-- Admin Footer -->
         @include('admin.layout.footer')
     </div>
+
+    <!-- Live Preview Modal -->
+    @include('admin.components.live-preview-modal')
 
     <!-- Image Upload Inspector & Client Auto-Compressor -->
     <script src="{{ asset('js/image-upload-helper.js') }}"></script>

@@ -27,6 +27,7 @@ Route::post('/relawan/register', [VolunteerController::class, 'store'])->name('p
 Route::get('/desa-binaan', [PageController::class, 'desaBinaan'])->name('public.pages.desabinaan');
 Route::get('/desa-binaan/{slug}', [PageController::class, 'showVillage'])->name('public.pages.village.show');
 Route::get('/mitra', [PageController::class, 'mitra'])->name('public.pages.mitra');
+Route::post('/mitra/register', [PageController::class, 'storePartnerApplication'])->name('public.partner.store');
 Route::get('/tentang-kami', [PageController::class, 'tentangKami'])->name('public.pages.tentangkami');
 Route::get('/galeri', [PageController::class, 'galeri'])->name('public.pages.galeri');
 
@@ -59,12 +60,15 @@ Route::middleware('admin.auth')->prefix('admin')->name('admin.')->group(function
     Route::middleware('only.admin')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
         Route::resource('programs', \App\Http\Controllers\Admin\ProgramController::class);
+        Route::post('partners/applications/{id}/approve', [\App\Http\Controllers\Admin\PartnerController::class, 'approveApplication'])->name('partners.applications.approve');
+        Route::delete('partners/applications/{id}', [\App\Http\Controllers\Admin\PartnerController::class, 'destroyApplication'])->name('partners.applications.destroy');
         Route::resource('partners', \App\Http\Controllers\Admin\PartnerController::class);
         Route::resource('galleries', \App\Http\Controllers\Admin\GalleryController::class);
         Route::resource('villages', \App\Http\Controllers\Admin\VillageController::class);
         
         Route::resource('hero-images', \App\Http\Controllers\Admin\HeroImageController::class);
         Route::resource('settings', \App\Http\Controllers\Admin\SettingController::class)->only(['index', 'update']);
+        Route::resource('organization-values', \App\Http\Controllers\Admin\OrganizationValueController::class)->only(['store', 'update', 'destroy']);
         Route::resource('statistics', \App\Http\Controllers\Admin\StatisticController::class)->only(['index', 'edit', 'update']);
         Route::resource('social-links', \App\Http\Controllers\Admin\SocialLinkController::class);
         
