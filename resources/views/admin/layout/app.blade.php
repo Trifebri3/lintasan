@@ -91,6 +91,10 @@
                                 <i class="fas fa-chart-line w-4 text-center"></i>
                                 <span>Dashboard</span>
                             </a>
+                            <a href="{{ route('admin.analytics.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg {{ request()->routeIs('admin.analytics.*') ? $activeClass : $inactiveClass }} transition">
+                                <i class="fas fa-chart-pie w-4 text-center"></i>
+                                <span>Analisis & SEO</span>
+                            </a>
                         @endif
                         <!-- Live Preview Trigger Button -->
                         <button type="button" onclick="openLivePreviewModal('/')" class="w-full text-left flex items-center justify-between px-3.5 py-2.5 rounded-lg text-emerald-300 hover:text-white bg-emerald-950/40 hover:bg-emerald-900/60 border border-emerald-800/40 transition group">

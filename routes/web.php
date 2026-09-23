@@ -59,6 +59,7 @@ Route::middleware('admin.auth')->prefix('admin')->name('admin.')->group(function
     // Only Admin can manage other modules
     Route::middleware('only.admin')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+        Route::get('analytics', [\App\Http\Controllers\Admin\AnalyticsController::class, 'index'])->name('analytics.index');
         Route::resource('programs', \App\Http\Controllers\Admin\ProgramController::class);
         Route::post('partners/applications/{id}/approve', [\App\Http\Controllers\Admin\PartnerController::class, 'approveApplication'])->name('partners.applications.approve');
         Route::delete('partners/applications/{id}', [\App\Http\Controllers\Admin\PartnerController::class, 'destroyApplication'])->name('partners.applications.destroy');

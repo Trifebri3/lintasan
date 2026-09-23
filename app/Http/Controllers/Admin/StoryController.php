@@ -16,7 +16,10 @@ class StoryController extends Controller
     public function index()
     {
         $stories = Story::latest()->get();
-        return view('admin.ceritadampak.index', compact('stories'));
+        $totalViews = $stories->sum('views');
+        $topStory = $stories->sortByDesc('views')->first();
+
+        return view('admin.ceritadampak.index', compact('stories', 'totalViews', 'topStory'));
     }
 
     /**

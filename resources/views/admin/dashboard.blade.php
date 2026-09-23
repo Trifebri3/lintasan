@@ -82,6 +82,54 @@
     </div>
     @endif
 
+    <!-- Traffic & Analytics Widget -->
+    <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-gray-100">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-emerald-50 text-brand-green border border-emerald-200/60">
+                        <i class="fas fa-chart-line mr-1"></i> Ringkasan Trafik 7 Hari
+                    </span>
+                    <span class="text-xs text-gray-400 font-semibold">• {{ number_format($totalPageviews) }} Total Kunjungan</span>
+                </div>
+                <h3 class="font-extrabold text-gray-900 text-base">Performa Pengunjung & Halaman Terpopuler</h3>
+            </div>
+            <a href="{{ route('admin.analytics.index') }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-green hover:bg-brand-darkgreen text-white text-xs font-bold transition shadow-xs">
+                <span>Buka Analisis & SEO Lengkap</span>
+                <i class="fas fa-arrow-right text-[10px]"></i>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+            <!-- Mini Chart -->
+            <div class="lg:col-span-7">
+                <div class="flex items-center justify-between text-xs mb-2">
+                    <span class="font-bold text-gray-700">Grafik Kunjungan Harian (7 Hari)</span>
+                    <span class="text-[11px] text-gray-400 font-semibold">Hari ini: <strong class="text-brand-green">{{ number_format($todayPageviews) }}</strong></span>
+                </div>
+                <div class="h-44 w-full relative">
+                    <canvas id="dashboardMiniTrendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Top 4 Pages Quick List -->
+            <div class="lg:col-span-5 space-y-2.5">
+                <span class="text-[11px] font-bold text-gray-400 uppercase tracking-wider block mb-1">Halaman Paling Banyak Dikunjungi</span>
+                @forelse($topPages as $idx => $p)
+                    <div class="flex items-center justify-between p-2.5 rounded-xl bg-gray-50 border border-gray-100 text-xs">
+                        <div class="flex items-center gap-2 min-w-0 pr-2">
+                            <span class="w-5 h-5 rounded-md bg-white border border-gray-200 text-gray-600 font-black text-[10px] flex items-center justify-center shrink-0">#{{ $idx + 1 }}</span>
+                            <span class="font-bold text-gray-800 truncate">{{ $p->page_title ?: $p->path }}</span>
+                        </div>
+                        <span class="font-extrabold text-brand-green shrink-0">{{ number_format($p->views) }} <span class="text-[10px] text-gray-400 font-normal">views</span></span>
+                    </div>
+                @empty
+                    <p class="text-xs text-gray-400 py-3">Belum ada rekaman kunjungan.</p>
+                @endforelse
+            </div>
+        </div>
+    </div>
+
     <!-- Latest Volunteer Signups -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h3 class="font-bold text-gray-900 text-sm mb-4 border-b border-gray-100 pb-3"><i class="fas fa-users-line mr-1 text-brand-green"></i> Pendaftaran Relawan Terbaru</h3>
@@ -115,4 +163,63 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const ctx = document.getElementById('dashboardMiniTrendChart');
+    if (!ctx) return;
+
+    const ctxTrend = ctx.getContext('2d');
+    const gradient = ctxTrend.createLinearGradient(0, 0, 0, 150);
+    gradient.addColorStop(0, 'rgba(0, 122, 72, 0.25)');
+    gradient.addColorStop(1, 'rgba(0, 122, 72, 0.0)');
+
+    new Chart(ctxTrend, {
+        type: 'line',
+        data: {
+            labels: {!! json_encode($trendLabels) !!},
+            datasets: [{
+                label: 'Kunjungan',
+                data: {!! json_encode($trendValues) !!},
+                borderColor: '#007A48',
+                backgroundColor: gradient,
+                borderWidth: 2,
+                fill: true,
+                tension: 0.35,
+                pointRadius: 3,
+                pointHoverRadius: 5,
+                pointBackgroundColor: '#007A48'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#0F172A',
+                    padding: 8,
+                    cornerRadius: 6,
+                    titleFont: { size: 11, weight: 'bold' },
+                    bodyFont: { size: 10 }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { size: 9 }, color: '#94A3B8' }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: { color: '#F1F5F9' },
+                    ticks: { font: { size: 9 }, color: '#94A3B8', precision: 0 }
+                }
+            }
+        }
+    });
+});
+</script>
 @endsection

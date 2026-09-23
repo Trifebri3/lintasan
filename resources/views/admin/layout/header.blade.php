@@ -67,6 +67,9 @@
                     <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-brand-green font-semibold">
                         <i class="fas fa-chart-line w-4 text-center"></i> Dashboard
                     </a>
+                    <a href="{{ route('admin.analytics.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-brand-green font-semibold">
+                        <i class="fas fa-chart-pie w-4 text-center"></i> Analisis & SEO
+                    </a>
                 @endif
             </div>
         </div>
