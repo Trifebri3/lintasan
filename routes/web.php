@@ -36,6 +36,11 @@ Route::get('/donasi', function () {
     return view('public.donasi.index');
 })->name('public.donasi');
 
+// Public Documents & Publications
+Route::get('/publikasi', [\App\Http\Controllers\DocumentController::class, 'index'])->name('public.documents.index');
+Route::get('/publikasi/unduh/{slug}', [\App\Http\Controllers\DocumentController::class, 'download'])->name('public.documents.download');
+Route::get('/publikasi/lihat/{slug}', [\App\Http\Controllers\DocumentController::class, 'preview'])->name('public.documents.preview');
+
 
 // Admin Guest / Auth Routes
 Route::middleware('guest')->group(function () {
@@ -66,6 +71,10 @@ Route::middleware('admin.auth')->prefix('admin')->name('admin.')->group(function
         Route::resource('partners', \App\Http\Controllers\Admin\PartnerController::class);
         Route::resource('galleries', \App\Http\Controllers\Admin\GalleryController::class);
         Route::resource('villages', \App\Http\Controllers\Admin\VillageController::class);
+        
+        // Documents & Publications
+        Route::post('documents/{id}/toggle-publish', [\App\Http\Controllers\Admin\DocumentController::class, 'togglePublish'])->name('documents.toggle_publish');
+        Route::resource('documents', \App\Http\Controllers\Admin\DocumentController::class);
         
         Route::resource('hero-images', \App\Http\Controllers\Admin\HeroImageController::class);
         Route::resource('settings', \App\Http\Controllers\Admin\SettingController::class)->only(['index', 'update']);

@@ -38,7 +38,7 @@
 
                 <!-- Dropdown 2: Tentang Kami -->
                 @php
-                    $isAboutActive = request()->routeIs('public.pages.tentangkami') || request()->routeIs('public.pages.mitra') || request()->routeIs('public.pages.galeri');
+                    $isAboutActive = request()->routeIs('public.pages.tentangkami') || request()->routeIs('public.pages.mitra') || request()->routeIs('public.pages.galeri') || request()->routeIs('public.documents.*');
                 @endphp
                 <div class="relative group pb-1">
                     <button class="hover:text-brand-green transition pb-1 flex items-center gap-1 {{ $isAboutActive ? 'text-brand-green border-b-2 border-brand-green font-semibold' : '' }}">
@@ -54,6 +54,9 @@
                         </a>
                         <a href="{{ route('public.pages.galeri') }}" class="block px-4 py-2.5 text-xs text-gray-700 hover:bg-green-50/55 hover:text-brand-green transition font-semibold">
                             {{ db_trans('menu_gallery', 'Galeri Kegiatan', 'Activity Gallery') }}
+                        </a>
+                        <a href="{{ route('public.documents.index') }}" class="block px-4 py-2.5 text-xs text-gray-700 hover:bg-green-50/55 hover:text-brand-green transition font-semibold">
+                            {{ db_trans('menu_documents', 'Dokumen & Publikasi', 'Documents & Publications') }}
                         </a>
                     </div>
                 </div>
@@ -119,6 +122,9 @@
         </a>
         <a href="{{ route('public.pages.tentangkami') }}" class="block px-3 py-2 rounded-lg hover:bg-gray-50 hover:text-brand-green transition">
             {{ db_trans('menu_about_us', 'Tentang Kami', 'About Us') }}
+        </a>
+        <a href="{{ route('public.documents.index') }}" class="block px-3 py-2 rounded-lg hover:bg-gray-50 hover:text-brand-green transition">
+            {{ db_trans('menu_documents', 'Dokumen & Publikasi', 'Documents & Publications') }}
         </a>
         <div class="grid grid-cols-2 gap-3 pt-3 border-t border-gray-100">
             <a href="{{ route('public.donasi') }}" class="block text-center bg-brand-orange text-white py-2 rounded-lg transition">

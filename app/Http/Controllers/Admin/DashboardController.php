@@ -22,6 +22,7 @@ class DashboardController extends Controller
         $storyCount = Story::count();
         $partnerCount = Partner::count();
         $volunteerCount = Volunteer::count();
+        $documentCount = \App\Models\Document::count();
 
         $latestVolunteers = Volunteer::latest()->limit(5)->get();
 
@@ -59,6 +60,7 @@ class DashboardController extends Controller
             'storyCount', 
             'partnerCount', 
             'volunteerCount', 
+            'documentCount',
             'latestVolunteers',
             'totalPageviews',
             'uniqueVisitors',

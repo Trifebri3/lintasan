@@ -93,6 +93,9 @@
                     <i class="fas fa-newspaper w-4 text-center"></i> Cerita Lapangan
                 </a>
                 @if(Auth::user()->role === 'admin')
+                    <a href="{{ route('admin.documents.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-brand-green font-semibold">
+                        <i class="fas fa-file-pdf w-4 text-center"></i> Dokumen & Laporan
+                    </a>
                     <a href="{{ route('admin.galleries.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-brand-green font-semibold">
                         <i class="fas fa-photo-film w-4 text-center"></i> Galeri Foto & Video
                     </a>

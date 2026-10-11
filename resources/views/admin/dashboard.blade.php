@@ -49,13 +49,23 @@
 
     @if(Auth::user()->role === 'admin')
     <!-- Quick Shortcuts to Custom Views -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <a href="{{ route('admin.documents.index') }}" class="bg-white hover:border-brand-green border border-gray-100 rounded-xl p-5 shadow-sm transition block group">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 bg-emerald-50 text-brand-green rounded-lg flex items-center justify-center text-lg shrink-0"><i class="fas fa-file-pdf text-red-500"></i></div>
+                <div>
+                    <h4 class="font-bold text-gray-950 group-hover:text-brand-green transition text-xs leading-snug">Dokumen & Laporan</h4>
+                    <p class="text-[10px] text-gray-400 mt-0.5 leading-snug">Unggah PDF/Word, Annual Report auto cover.</p>
+                </div>
+            </div>
+        </a>
+
         <a href="{{ route('admin.hero-images.index') }}" class="bg-white hover:border-brand-green border border-gray-100 rounded-xl p-5 shadow-sm transition block group">
             <div class="flex items-center gap-4">
                 <div class="w-10 h-10 bg-green-50 text-brand-green rounded-lg flex items-center justify-center text-lg shrink-0"><i class="fas fa-images"></i></div>
                 <div>
-                    <h4 class="font-bold text-gray-950 group-hover:text-brand-green transition text-xs leading-snug">Kelola Banner Slide Hero</h4>
-                    <p class="text-[10px] text-gray-400 mt-0.5 leading-snug">Ubah foto slideshow, slogan utama & sub-slogan.</p>
+                    <h4 class="font-bold text-gray-950 group-hover:text-brand-green transition text-xs leading-snug">Banner Slide Hero</h4>
+                    <p class="text-[10px] text-gray-400 mt-0.5 leading-snug">Ubah foto slideshow & slogan utama.</p>
                 </div>
             </div>
         </a>
@@ -64,8 +74,8 @@
             <div class="flex items-center gap-4">
                 <div class="w-10 h-10 bg-orange-50 text-brand-orange rounded-lg flex items-center justify-center text-lg shrink-0"><i class="fas fa-file-lines"></i></div>
                 <div>
-                    <h4 class="font-bold text-gray-950 group-hover:text-brand-green transition text-xs leading-snug">Kelola Visi, Misi & Konten</h4>
-                    <p class="text-[10px] text-gray-400 mt-0.5 leading-snug">Ubah isi profil yayasan, visi misi, & pilar dasar.</p>
+                    <h4 class="font-bold text-gray-950 group-hover:text-brand-green transition text-xs leading-snug">Visi, Misi & Konten</h4>
+                    <p class="text-[10px] text-gray-400 mt-0.5 leading-snug">Ubah isi profil yayasan & pilar dasar.</p>
                 </div>
             </div>
         </a>
@@ -74,8 +84,8 @@
             <div class="flex items-center gap-4">
                 <div class="w-10 h-10 bg-teal-50 text-teal-650 rounded-lg flex items-center justify-center text-lg shrink-0"><i class="fas fa-calculator"></i></div>
                 <div>
-                    <h4 class="font-bold text-gray-950 group-hover:text-brand-green transition text-xs leading-snug">Kelola Angka Statistik</h4>
-                    <p class="text-[10px] text-gray-400 mt-0.5 leading-snug">Ubah metrik angka dampak desa mitra lintasan & relawan.</p>
+                    <h4 class="font-bold text-gray-950 group-hover:text-brand-green transition text-xs leading-snug">Angka Statistik</h4>
+                    <p class="text-[10px] text-gray-400 mt-0.5 leading-snug">Ubah metrik angka dampak desa mitra.</p>
                 </div>
             </div>
         </a>
@@ -94,7 +104,7 @@
                 </div>
                 <h3 class="font-extrabold text-gray-900 text-base">Performa Pengunjung & Halaman Terpopuler</h3>
             </div>
-            <a href="{{ route('admin.analytics.index') }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-green hover:bg-brand-darkgreen text-white text-xs font-bold transition shadow-xs">
+            <a href="{{ url('/admin/analytics') }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-green hover:bg-brand-darkgreen text-white text-xs font-bold transition shadow-xs">
                 <span>Buka Analisis & SEO Lengkap</span>
                 <i class="fas fa-arrow-right text-[10px]"></i>
             </a>

@@ -62,6 +62,7 @@
                 <li><a href="{{ route('public.stories.index') }}" class="hover:text-white transition">{{ db_trans('menu_impact_stories', 'Cerita Lapangan', 'Field Stories') }}</a></li>
                 <li><a href="{{ route('public.pages.mitra') }}" class="hover:text-white transition">{{ db_trans('menu_partners', 'Mitra', 'Partners') }}</a></li>
                 <li><a href="{{ route('public.pages.galeri') }}" class="hover:text-white transition">{{ db_trans('menu_gallery', 'Galeri', 'Gallery') }}</a></li>
+                <li><a href="{{ route('public.documents.index') }}" class="hover:text-white transition">{{ db_trans('menu_documents', 'Dokumen & Publikasi', 'Documents & Publications') }}</a></li>
                 <li><a href="{{ route('public.volunteer.index') }}" class="hover:text-white transition">{{ db_trans('menu_volunteers', 'Relawan', 'Volunteers') }}</a></li>
             </ul>
         </div>

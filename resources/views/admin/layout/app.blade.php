@@ -134,6 +134,10 @@
                             <span>Cerita Lapangan</span>
                         </a>
                         @if(Auth::user()->role === 'admin')
+                            <a href="{{ route('admin.documents.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg {{ request()->routeIs('admin.documents.*') ? $activeClass : $inactiveClass }} transition">
+                                <i class="fas fa-file-pdf w-4 text-center"></i>
+                                <span>Dokumen & Laporan</span>
+                            </a>
                             <a href="{{ route('admin.galleries.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg {{ request()->routeIs('admin.galleries.*') ? $activeClass : $inactiveClass }} transition">
                                 <i class="fas fa-photo-film w-4 text-center"></i>
                                 <span>Galeri Foto & Video</span>
