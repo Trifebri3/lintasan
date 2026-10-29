@@ -45,7 +45,7 @@
             <button type="button" onclick="switchCategoryTab('banner')" id="tab-btn-banner" class="category-tab-btn px-4 py-2.5 rounded-lg text-xs font-bold transition flex items-center gap-2 {{ $activeTab === 'banner' ? 'bg-brand-green text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}">
                 <i class="fas fa-images text-sm"></i>
                 <span>Foto Latar & Banner</span>
-                <span class="text-[10px] px-1.5 py-0.2 rounded-full {{ $activeTab === 'banner' ? 'bg-white/20 text-white' : 'bg-gray-200 text-gray-700' }}">3</span>
+                <span class="text-[10px] px-1.5 py-0.2 rounded-full {{ $activeTab === 'banner' ? 'bg-white/20 text-white' : 'bg-gray-200 text-gray-700' }}">{{ count($categories['banner']['keys']) }}</span>
             </button>
 
             <button type="button" onclick="switchCategoryTab('label')" id="tab-btn-label" class="category-tab-btn px-4 py-2.5 rounded-lg text-xs font-bold transition flex items-center gap-2 {{ $activeTab === 'label' ? 'bg-brand-green text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}">
@@ -151,6 +151,38 @@
                 'help' => 'Judul bagian statistik capaian yayasan di halaman depan (contoh: Lintasan Dalam Angka).',
                 'icon' => 'fa-chart-pie',
                 'type' => 'text'
+            ],
+            'bg_photo_dibalik_lintasan' => [
+                'label' => 'Foto Latar Banner Hero: Di Balik LINTASAN',
+                'category' => 'banner',
+                'location' => 'Halaman Di Balik LINTASAN (/di-balik-lintasan) - Hero Banner Atas',
+                'help' => 'Upload foto latar belakang hero banner untuk halaman Dewan, Pimpinan, dan Tim Yayasan (bisa diganti sewaktu-waktu). Rekomendasi: lansekap 1920x1080px, maks 4MB.',
+                'icon' => 'fa-panorama',
+                'type' => 'image'
+            ],
+            'badge_dibalik_lintasan' => [
+                'label' => 'Teks Badge Banner: Di Balik LINTASAN',
+                'category' => 'banner',
+                'location' => 'Halaman Di Balik LINTASAN - Label Badge Atas',
+                'help' => 'Label kecil di atas judul utama banner hero (contoh: BOARD, LEADERSHIP & TEAM).',
+                'icon' => 'fa-tag',
+                'type' => 'text'
+            ],
+            'title_dibalik_lintasan' => [
+                'label' => 'Judul Utama Banner: Di Balik LINTASAN',
+                'category' => 'banner',
+                'location' => 'Halaman Di Balik LINTASAN - Judul Hero Banner',
+                'help' => 'Judul besar halaman pengurus dan dewan (contoh: Di Balik LINTASAN).',
+                'icon' => 'fa-heading',
+                'type' => 'text'
+            ],
+            'subtitle_dibalik_lintasan' => [
+                'label' => 'Subjudul Deskripsi Banner: Di Balik LINTASAN',
+                'category' => 'banner',
+                'location' => 'Halaman Di Balik LINTASAN - Deskripsi di Bawah Judul',
+                'help' => 'Deskripsi pengantar singkat mengenai figur pendiri, pembina, pengawas, pengurus, dan penggerak yayasan.',
+                'icon' => 'fa-align-left',
+                'rows' => 3
             ],
             'bg_photo_impact' => [
                 'label' => 'Foto Latar Seksi Statistik Dampak',

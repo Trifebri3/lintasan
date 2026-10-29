@@ -131,5 +131,59 @@ class SettingsSeeder extends Seeder
                 'type' => 'text'
             ]
         );
+
+        Setting::updateOrCreate(
+            ['key' => 'volunteer_title'],
+            [
+                'value_id' => 'Menjadi Jejaring Lintasan',
+                'value_en' => 'Join the LINTASAN Network',
+                'type' => 'text'
+            ]
+        );
+
+        Setting::updateOrCreate(
+            ['key' => 'menu_dibalik_lintasan'],
+            [
+                'value_id' => 'Di Balik LINTASAN',
+                'value_en' => 'Behind LINTASAN',
+                'type' => 'text'
+            ]
+        );
+
+        Setting::updateOrCreate(
+            ['key' => 'bg_photo_dibalik_lintasan'],
+            [
+                'value_id' => 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1920&q=80',
+                'value_en' => 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1920&q=80',
+                'type' => 'image'
+            ]
+        );
+
+        Setting::updateOrCreate(
+            ['key' => 'badge_dibalik_lintasan'],
+            [
+                'value_id' => 'BOARD, LEADERSHIP & TEAM',
+                'value_en' => 'BOARD, LEADERSHIP & TEAM',
+                'type' => 'text'
+            ]
+        );
+
+        Setting::updateOrCreate(
+            ['key' => 'title_dibalik_lintasan'],
+            [
+                'value_id' => 'Di Balik LINTASAN',
+                'value_en' => 'Behind LINTASAN',
+                'type' => 'text'
+            ]
+        );
+
+        Setting::updateOrCreate(
+            ['key' => 'subtitle_dibalik_lintasan'],
+            [
+                'value_id' => 'Mengenal figur pendiri, pembina, pengawas, pengurus, dan penggerak di balik langkah nyata Yayasan LINTASAN.',
+                'value_en' => 'Get to know the founders, trustees, leadership, and dedicated team behind Yayasan LINTASAN.',
+                'type' => 'text'
+            ]
+        );
     }
 }

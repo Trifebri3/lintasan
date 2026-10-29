@@ -110,4 +110,19 @@ class PageController extends Controller
         $galleryItems = Gallery::orderBy('sort_order')->get();
         return view('public.galeri.index', compact('galleryItems'));
     }
+
+    /**
+     * Display People / Board, Leadership & Team (Di Balik LINTASAN) page.
+     */
+    public function diBalikLintasan()
+    {
+        $localeCol = session('locale') == 'en' ? 'value_en' : 'value_id';
+        $settings = Setting::pluck($localeCol, 'key')->all();
+        $members = \App\Models\TeamMember::where('is_active', true)
+            ->orderBy('sort_order', 'asc')
+            ->get();
+        $categories = \App\Models\TeamMember::getCategories();
+
+        return view('public.dibaliklintasan.index', compact('settings', 'members', 'categories'));
+    }
 }

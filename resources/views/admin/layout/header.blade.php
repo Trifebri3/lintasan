@@ -82,6 +82,9 @@
                     <a href="{{ route('admin.hero-images.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-brand-green font-semibold">
                         <i class="fas fa-images w-4 text-center"></i> Slide Hero Banner
                     </a>
+                    <a href="{{ route('admin.people.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-brand-green font-semibold">
+                        <i class="fas fa-users-viewfinder w-4 text-center"></i> Di Balik LINTASAN (Tim)
+                    </a>
                     <a href="{{ route('admin.settings.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-brand-green font-semibold">
                         <i class="fas fa-file-pen w-4 text-center"></i> Konten Halaman & Nilai
                     </a>

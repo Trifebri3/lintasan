@@ -22,6 +22,7 @@
                     <select id="preview-page-selector" onchange="changePreviewPage(this.value)" class="bg-gray-800 hover:bg-gray-750 text-gray-200 text-xs font-medium rounded-lg pl-2.5 pr-8 py-1.5 border border-gray-700 focus:outline-none focus:border-brand-green cursor-pointer appearance-none">
                         <option value="/">🏠 Beranda (Home)</option>
                         <option value="/tentang-kami">💡 Tentang Kami & Nilai</option>
+                        <option value="/di-balik-lintasan">👥 Di Balik LINTASAN (Tim & Dewan)</option>
                         <option value="/program">🎯 Program Unggulan</option>
                         <option value="/desa-binaan">🗺️ Desa Binaan & Peta</option>
                         <option value="/mitra">🤝 Kemitraan & Pengajuan</option>

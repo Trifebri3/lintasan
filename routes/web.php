@@ -29,6 +29,10 @@ Route::get('/desa-binaan/{slug}', [PageController::class, 'showVillage'])->name(
 Route::get('/mitra', [PageController::class, 'mitra'])->name('public.pages.mitra');
 Route::post('/mitra/register', [PageController::class, 'storePartnerApplication'])->name('public.partner.store');
 Route::get('/tentang-kami', [PageController::class, 'tentangKami'])->name('public.pages.tentangkami');
+Route::get('/di-balik-lintasan', [PageController::class, 'diBalikLintasan'])->name('public.pages.dibaliklintasan');
+Route::get('/people', function () {
+    return redirect()->route('public.pages.dibaliklintasan');
+});
 Route::get('/galeri', [PageController::class, 'galeri'])->name('public.pages.galeri');
 
 // Public Donation
@@ -77,6 +81,7 @@ Route::middleware('admin.auth')->prefix('admin')->name('admin.')->group(function
         Route::resource('documents', \App\Http\Controllers\Admin\DocumentController::class);
         
         Route::resource('hero-images', \App\Http\Controllers\Admin\HeroImageController::class);
+        Route::resource('people', \App\Http\Controllers\Admin\TeamMemberController::class);
         Route::resource('settings', \App\Http\Controllers\Admin\SettingController::class)->only(['index', 'update']);
         Route::resource('organization-values', \App\Http\Controllers\Admin\OrganizationValueController::class)->only(['store', 'update', 'destroy']);
         Route::resource('statistics', \App\Http\Controllers\Admin\StatisticController::class)->only(['index', 'edit', 'update']);

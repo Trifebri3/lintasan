@@ -64,10 +64,18 @@ class SettingController extends Controller
             'banner' => [
                 'id' => 'banner',
                 'title' => 'Foto Latar & Banner',
-                'badge' => 'Visual Beranda & Footer',
-                'subtitle' => 'Kelola foto latar belakang seksi statistik dampak dan banner ajakan aksi (CTA)',
+                'badge' => 'Visual Beranda, Hero & Footer',
+                'subtitle' => 'Kelola foto latar belakang seksi statistik dampak, hero banner Di Balik LINTASAN, dan banner CTA',
                 'icon' => 'fa-images',
-                'keys' => ['title_impact', 'bg_photo_impact', 'bg_photo_cta']
+                'keys' => [
+                    'bg_photo_dibalik_lintasan',
+                    'badge_dibalik_lintasan',
+                    'title_dibalik_lintasan',
+                    'subtitle_dibalik_lintasan',
+                    'title_impact',
+                    'bg_photo_impact',
+                    'bg_photo_cta',
+                ]
             ],
             'label' => [
                 'id' => 'label',

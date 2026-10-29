@@ -13,7 +13,7 @@
                 {{ db_trans('volunteer_badge', 'Mari Bergabung', 'Get Involved') }}
             </span>
             <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">
-                {{ db_trans('volunteer_title', 'Menjadi Relawan LINTASAN', 'Become a LINTASAN Volunteer') }}
+                {{ db_trans('volunteer_title', 'Menjadi Jejaring Lintasan', 'Join the LINTASAN Network') }}
             </h1>
             <div class="h-1 w-12 bg-brand-orange mx-auto rounded"></div>
             <p class="text-gray-500 text-sm max-w-lg mx-auto mt-4 leading-relaxed">

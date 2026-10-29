@@ -74,6 +74,7 @@
             </h4>
             <ul class="space-y-2 text-xs">
                 <li><a href="{{ route('public.pages.tentangkami') }}" class="hover:text-white transition">{{ db_trans('footer_org_profile', 'Profil Organisasi', 'Organization Profile') }}</a></li>
+                <li><a href="{{ route('public.pages.dibaliklintasan') }}" class="hover:text-white transition">{{ db_trans('menu_dibalik_lintasan', 'Di Balik LINTASAN', 'Behind LINTASAN') }}</a></li>
                 <li><a href="{{ route('public.pages.tentangkami') }}" class="hover:text-white transition">{{ db_trans('footer_vision_mission', 'Visi & Misi', 'Vision & Mission') }}</a></li>
                 <li><a href="{{ route('public.pages.tentangkami') }}" class="hover:text-white transition">{{ db_trans('footer_our_values', 'Nilai-Nilai', 'Our Values') }}</a></li>
             </ul>

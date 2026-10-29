@@ -95,6 +95,26 @@
                     {!! nl2br(e($conclusionText)) !!}
                 @endif
             </div>
+
+            <!-- Di Balik LINTASAN (Board & Leadership Banner) -->
+            <div class="bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 rounded-xl p-6 sm:p-8 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-md">
+                <div>
+                    <span class="text-brand-orange font-bold text-[10px] uppercase tracking-wider block mb-1">
+                        BOARD, LEADERSHIP & TEAM
+                    </span>
+                    <h4 class="text-lg sm:text-xl font-extrabold">
+                        {{ session('locale') == 'en' ? 'Behind LINTASAN Foundation' : 'Di Balik Langkah Yayasan LINTASAN' }}
+                    </h4>
+                    <p class="text-xs text-gray-300 mt-1 max-w-lg leading-relaxed">
+                        {{ session('locale') == 'en' ? 'Get to know our founders, advisory board, supervisory board, and dedicated team members.' : 'Mengenal figur pendiri, dewan pembina, dewan pengawas, pengurus harian, dan tim pelaksana lapangan.' }}
+                    </p>
+                </div>
+                <a href="{{ route('public.pages.dibaliklintasan') }}" class="bg-brand-orange hover:bg-orange-600 text-white font-bold text-xs px-5 py-3 rounded-lg shadow-lg transition flex items-center gap-2 shrink-0">
+                    <i class="fas fa-users-viewfinder"></i>
+                    <span>{{ db_trans('menu_dibalik_lintasan', 'Di Balik LINTASAN', 'Behind LINTASAN') }}</span>
+                    <i class="fas fa-arrow-right text-[10px]"></i>
+                </a>
+            </div>
         </div>
     </div>
 </div>

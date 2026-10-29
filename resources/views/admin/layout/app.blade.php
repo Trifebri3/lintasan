@@ -120,6 +120,10 @@
                                 <i class="fas fa-images w-4 text-center"></i>
                                 <span>Slide Hero Banner</span>
                             </a>
+                            <a href="{{ route('admin.people.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg {{ request()->routeIs('admin.people.*') ? $activeClass : $inactiveClass }} transition">
+                                <i class="fas fa-users-viewfinder w-4 text-center"></i>
+                                <span>Di Balik LINTASAN (Tim)</span>
+                            </a>
                             <a href="{{ route('admin.settings.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg {{ request()->routeIs('admin.settings.*') ? $activeClass : $inactiveClass }} transition">
                                 <i class="fas fa-file-pen w-4 text-center"></i>
                                 <span>Konten Halaman & Nilai</span>
